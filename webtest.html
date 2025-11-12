@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华姓氏文化查询系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'STKaiti', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f3e9 0%, #e8d9c5 100%);
+            min-height: 100vh;
+            color: #5c3713;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid #8B0000;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #8B0000, #B22222, #8B0000);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .decorative-border {
+            height: 8px;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+            margin: 15px 0;
+        }
+        
+        .search-section {
+            padding: 30px 20px;
+            text-align: center;
+            background-color: #f8f4ec;
+        }
+        
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            font-size: 1.1rem;
+            outline: none;
+            background: white;
+        }
+        
+        .search-box button {
+            background: linear-gradient(90deg, #8B0000, #B22222);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-box button:hover {
+            background: linear-gradient(90deg, #B22222, #8B0000);
+        }
+        
+        .popular-surnames {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .surname-tag {
+            background: linear-gradient(135deg, #8B0000, #B22222);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .surname-tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .results-section {
+            padding: 30px 20px;
+            display: none;
+        }
+        
+        .surname-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .surname-character {
+            font-size: 5rem;
+            color: #8B0000;
+            margin-bottom: 10px;
+            font-family: 'STKaiti', serif;
+        }
+        
+        .surname-name {
+            font-size: 2rem;
+            color: #5c3713;
+        }
+        
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid #8B0000;
+        }
+        
+        .info-card h3 {
+            color: #8B0000;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.3rem;
+        }
+        
+        .info-list {
+            list-style-type: none;
+        }
+        
+        .info-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .info-list li i {
+            color: #8B0000;
+            margin-right: 10px;
+        }
+        
+        .culture-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .culture-section h3 {
+            color: #8B0000;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .culture-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+        
+        .culture-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .culture-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .culture-content::-webkit-scrollbar-thumb {
+            background: #8B0000;
+            border-radius: 4px;
+        }
+        
+        .culture-content::-webkit-scrollbar-thumb:hover {
+            background: #B22222;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .no-results h3 {
+            color: #5c3713;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f4ec;
+            color: #5c3713;
+            border-top: 1px solid #e8d9c5;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .surname-character {
+                font-size: 4rem;
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                border-radius: 10px;
+            }
+            
+            .search-box input, .search-box button {
+                width: 100%;
+                border-radius: 0;
+            }
+            
+            .surname-character {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>中华姓氏文化查询系统</h1>
+            <div class="decorative-border"></div>
+            <p>探索中华姓氏源流，了解衍派传芳，传承门楣文化</p>
+        </header>
+        
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="surnameInput" placeholder="请输入您要查询的姓氏...">
+                <button id="searchBtn"><i class="fas fa-search"></i> 查询</button>
+            </div>
+            
+            <p>热门姓氏：</p>
+            <div class="popular-surnames">
+                <div class="surname-tag" data-surname="李">李</div>
+                <div class="surname-tag" data-surname="王">王</div>
+                <div class="surname-tag" data-surname="张">张</div>
+                <div class="surname-tag" data-surname="刘">刘</div>
+                <div class="surname-tag" data-surname="陈">陈</div>
+                <div class="surname-tag" data-surname="杨">杨</div>
+                <div class="surname-tag" data-surname="赵">赵</div>
+                <div class="surname-tag" data-surname="黄">黄</div>
+                <div class="surname-tag" data-surname="蔡">蔡</div>
+                <div class="surname-tag" data-surname="吴">吴</div>
+            </div>
+        </section>
+        
+        <section class="results-section" id="resultsSection">
+            <div class="surname-header">
+                <div class="surname-character" id="surnameChar">李</div>
+                <h2 class="surname-name" id="surnameName">李姓</h2>
+            </div>
+            
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3><i class="fas fa-code-branch"></i> 衍派信息</h3>
+                    <ul class="info-list" id="derivationList">
+                        <!-- 衍派数据将通过JavaScript动态填充 -->
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-leaf"></i> 传芳信息</h3>
+                    <ul class="info-list" id="traditionList">
+                        <!-- 传芳数据将通过JavaScript动态填充 -->
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-archway"></i> 门楣文化</h3>
+                    <ul class="info-list" id="lintelList">
+                        <!-- 门楣文化数据将通过JavaScript动态填充 -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="culture-section">
+                <h3><i class="fas fa-book"></i> 闽南门楣文化大观园</h3>
+                <div class="culture-content" id="cultureContent">
+                    <!-- 姓氏文化简介将通过JavaScript动态填充 -->
+                </div>
+            </div>
+        </section>
+        
+        <section class="no-results" id="noResults">
+            <i class="fas fa-search"></i>
+            <h3>未找到相关姓氏信息</h3>
+            <p>请尝试输入其他姓氏或检查输入是否正确</p>
+        </section>
+        
+        <footer>
+            <p>中华姓氏文化查询系统 &copy; 2023 | 数据来源于姓氏文化研究数据库</p>
+        </footer>
+    </div>
+
+    <script>
+        // 从文档中提取的姓氏数据
+        const surnameData = {
+            "李": {
+                character: "李",
+                derivations: ["陇西衍派", "梧桐衍派"],
+                traditions: ["沙堤传芳", "凤竹传芳"],
+                lintels: {
+                       src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/li.jpg" ,
+					   alt:"陇西衍派门楣示例"
+                    },
+                culture: `李氏溯源久远，经历几千年的繁衍，如今全世界李氏宗亲在一亿人以上。
+
+史籍记载，李氏郡望有13个，即:陇西、赵郡、柳城、略阳、鸡田、武威、代北、高丽、范阳、渤海、西域、河南、京兆等。其中，陇西与赵郡这两支郡望名声最大，今天下李氏多出自这两支。
+
+他们中的大部分人认为自己的祖先源自"陇西郡"。诗人李白就自称"陇西布衣",并赋诗云："家本陇西人，先为汉边将。"(《赠张相稿·二》)
+
+陇西李氏根在陇西狄道，今甘肃临洮。据《人民日报》(1992年8月27日)报道"李氏根基在陇西"，已正式批准在陇西修复李氏"陇西堂"。现在，泉州城乡乃至台湾、东南亚的李氏人家，大都在大门匾额上镌刻着"陇西衍派"，以示不忘祖源。
+
+李氏入闽，最早进入闽南的陇西李氏为谁，也有不同说法。但宗奉五山君怀公者人数最多。李君怀，唐宗室越江王李元祥之后。因军功由泉州路万户府参军，擢为濠州节度使，再迁五州节度使，罹病归里疗治，仍上书《施政疏》三千言，深得南宋宁宗嘉许，逝世后诰封南靖王。
+
+陇西李氏的繁衍壮大和中华民族的大融合是一个同步的历史进程。"陇西衍派"堂号下所聚集的李氏是一个多民族大联合的大群体。陇西李氏非凡的凝聚力正是中华民族强大凝聚力的具体见证。`
+            },
+            "王": {
+                character: "王",
+                derivations: ["太原衍派", "开闽衍派"],
+                traditions: ["开闽传芳"],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/testw.jpg" ,
+					alt:"开闽衍派门楣示例"
+					},
+                culture: `"您贵姓，您是哪里人?"关乎血脉的追问，使得博大精深的姓氏文化成了重要载体。为防止血缘关系紊乱而导致家族瓦解，家谱中清晰记载着衍派传芳、堂号和字辈，其中最显而易见的衍派与传芳便刻在了闽南人家的门楣上。闽南人的姓氏大致可分为三大来源，一是中原士族三次入闽，以闽南十大姓为主，二是唐以前的原住居民闽越人，"蓝、钟、雷、盘"等，三则是宋元时期异族定居闽南"蒲、丁"等20多姓。
+
+每个宗族在迁徙和发展的过程中，不但衍生出姓氏的支脉，也出现了不少足以垂范于后世的贤才俊杰。所谓衍派，就是姓氏的发源或是支脉；传芳则是延续祖德，光宗耀祖的某种标识，即使相同的衍派也有不一样的传芳。
+
+今天客从何处来实践团为大家科普的则是百家姓之首的"王"姓，在闽南地区常见的衍派传芳：开闽衍派，开闽传芳。
+
+开闽王氏，当今王氏中最大的一支。开闽王氏是指入闽三王：广武王---王潮、武肃王------王审邽、忠懿王---王审知的后裔家族集团，开闽王氏其先源是琅琊王氏流脉，来自河南光州固始县。据福建《忠懿王氏族谱》，公元885年王潮、审邽、审知三兄弟率领中原子弟入闽，至公元909年建立闽国，其三兄弟中的王审知又为开闽王，被世人尊称为"开闽第一"。
+
+堂号---开闽衍派。
+之所以说开闽王氏著名，在于王氏三兄弟起于草莽，自故土河南固始南下福建，建立闽国。给予福建一个全新的定位，从之前的蛮荒到闽国之后的繁华。短短两百多年之后的世界第一大港泉州刺桐港正是建立在闽国海外贸易的基础之上。可以这么三王主政时期开拓了福建以海洋文化为特色的局面。也因此勇敢拼搏的开闽王氏后裔遍布海外各国，现代国家新加坡的第一任民选总统鼎昌公把千年之前祖先勇于开拓拼搏的精神再一次向世人展现，这是王氏家族最年轻的成员------开闽王氏的骄傲，从封建社会的开疆封土的自称天子到现代社会的心系民生的民选总统，开闽王氏延续家族风气，发扬王氏家族精神，直至今日仍然人才辈出。`
+            },
+            "陈": {
+                character: "陈",
+                derivations: ["颍川衍派", "南湖衍派", "南山衍派", "官山衍派", "太邱衍派", "陈江衍派"],
+                traditions: ["颍水传芳", "飞钱传芳", "南院传芳", "玉湖传芳"],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/photochen.jpg" ,
+					alt:"颍川衍派门楣示例"
+					},
+                culture: `在闽南及台湾地区的民居中，我们常能在门额上看到"颍川衍派"、"颍川世胄"、"颍水传芳"等字样，这些均是对陈姓先祖和颍川故地的敬仰与传承。今天客从何处来实践团要为大家科普的是颍川衍派的由来以及百家姓中陈氏的历史渊源。
+
+"颍川衍派"是中国传统社会中一个具有深厚历史和文化底蕴的宗派称谓，特指陈姓中的一支。颍川，古郡名，位于今天的河南省禹州市一带，因发源于河南嵩山的颍水而得名。秦王政十七年（公元前230年）置颍川郡，此后颍川成为中原地区的重要政治、经济和文化中心。
+
+陈氏是中国古老的姓氏之一，历史悠久，源远流长。据史书记载，陈氏主要得姓于周朝初年的陈胡公满。胡公满是三皇五帝之一的虞舜的后代，因封于陈地（今河南开封以东，安徽亳县以北），故以国为氏，称为陈氏。陈氏血脉中不乏仁德之君和杰出人物。如舜帝以仁德治天下，南朝陈的开国皇帝陈霸先，被誉为南朝第一英主。在近现代，陈氏也涌现出许多杰出人物，如无产阶级革命家陈潭秋、陈毅，数学家陈景润，文学家陈衍等。
+
+颍川陈氏，作为陈氏中的一支，尤为显赫。自陈胡公满封陈以来，陈氏子孙在颍川地区繁衍生息，逐渐形成了名门望族。东汉时期的陈寔，是颍川陈氏的重要代表人物，他德高望重，名倾天下，被后世尊为颍川陈氏的始祖。陈寔的子孙在汉魏时期也多有建树，如陈群、陈泰等人均是当时的名臣。此外，颍川陈氏还涌现出许多文人墨客和将领，他们在中国历史上留下了浓墨重彩的一笔。
+
+"颍川衍派"不仅是陈氏子孙对先祖和故地的敬仰与传承，更是中华民族悠久历史和灿烂文化的见证。通过了解"颍川衍派"与陈氏的历史渊源和辉煌成就，我们可以更加深刻地感受到中华文化的博大精深和源远流长。`
+            },
+            "张": {
+                character: "张",
+                derivations: ["清河衍派", "曲江衍派", "鍳湖衍派"],
+                traditions: [],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/testzhang.jpg" ,
+					alt:"清河衍派门楣示例"
+					},
+                culture: `张姓是中国常见姓氏之一，历史悠久。清河衍派是张姓的重要分支之一，曲江衍派和鍳湖衍派也是张姓的重要支系。张姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "叶": {
+                character: "叶",
+                derivations: ["南阳衍派", "濑水衍派"],
+                traditions: ["沈根传芳", "古濑传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ye-shi-xiao.jpg" ,
+					alt:"叶氏宗祠门楣示例"
+					},
+                culture: `叶姓是中华姓氏之一，源出芈姓，颛顼为其远祖，尊叶公沈诸梁为始祖。叶姓在宋版《百家姓》中排名第257位，在当今姓氏人口排名中位列第49位。`
+            },
+            "蔡": {
+                character: "蔡",
+                derivations: ["青阳衍派", "济阳衍派"],
+                traditions: ["忠惠传芳", "齐阳传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/cai.jpg" ,
+					alt:"济阳衍派门楣示例"
+					},
+                culture: `梧林蔡氏是北宋泉州知府蔡襄的后人，从梧林民居上"忠惠传芳"的堂号及篆刻的各类称颂蔡襄的诗词可见，梧林人对这位清廉耿直、勤政爱民的先祖十分崇敬。
+
+明洪武年间，梧林古村落的肇基祖为石狮市祥芝镇山兜村丰田始祖蔡均用的第六个儿子蔡旺生。当年蔡旺生沿溪赶放鸭群至此，鸭群盘桓不去，蔡旺生认为这是天意的指示，便定居于此，繁衍生息。清初，梧林已初步形成村庄规模。清康熙年间，蔡祖旺生十世裔孙蔡以褚因随施琅平台有功，敕封为"镇国将军副总戎"。清末，梧林开始有人旅居海外，随后旅居海外的华侨回国出资建造了大量精美的洋楼，使村庄规模扩大，建筑风格逐步多元化。
+
+蔡以褚：梧林将军墓的墓主蔡以褚，是丰田蔡氏十一世祖。康熙癸亥年（1683年），他跟随靖海将军施琅率水师渡海攻取澎湖，因在澎湖中建立勋绩，功授副总兵，食二品俸，驻守台湾。可惜后来以劳瘁早逝，未及天命之年。他的两个儿子光座、光序，将其葬回故里梧林上山头。光座于丙寅岁（1686年）取进台湾凤山（现高雄）县学，庚寅科（1710年）考中岁进士第一名，任汀州府长汀学训导。如今，蔡将军的传裔蕃盛，分布在晋江梧林、石狮古浮及台湾各地。
+
+蔡顺意：旅菲商人蔡顺意于1938年建造了侨批馆。建设时恰逢抗战时期，他义无反顾地将装修款倾囊支持抗日，导致自家"侨批馆"没钱装修，以毛坯房的形式存在了几十年，成为爱国的历史见证。而且，蔡顺意除了在家乡梧林建造侨批馆，还在台湾、厦门鼓浪屿岛上各盖了一幢一模一样的洋楼作为侨批馆，准备服务于众多在家乡的侨眷们。他还将梧林的这座楼房捐给村里做学堂，并聘请名师授课，以培养家乡人才。侨批馆作为村里的学堂一直用到1984年，至今门上"好好学习，天天向上"的题词仍然清晰可见。因此，对于梧林人来说，他们更乐意将侨批馆称为"旧学堂"。
+
+梧林蔡氏华侨们在海外辛苦打拼，事业有成后回到家乡建起风格各异的建筑。这些建筑不仅是艺术的瑰宝，也承载着他们爱国爱乡、勤劳简朴、孝顺友爱等传统美德，这些故事和精神被后人铭记和传承。`
+            },
+            "杨": {
+                character: "杨",
+                derivations: ["弘农衍派", "印塘衍派", "芙蓉衍派", "道南衍派", "关西衍派"],
+                traditions: ["弘农流芳", "四知传芳", "清白传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/yang.jpg" ,
+					alt:"四知衍派门楣示例"
+					},
+                culture: `杨姓是中国古老姓氏之一，源出姬姓，周宣王少子尚父被封于杨邑，建立杨国，其后人以杨为氏。杨姓在历史上名人众多，如隋朝开国皇帝杨坚、初唐四杰杨炯、宋代杨家将等。`
+            },
+            "魏": {
+                character: "魏",
+                derivations: ["钜鹿衍派", "莆阳衍派"],
+                traditions: ["钜鹿传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/wei.png" ,
+					alt:"钜鹿传芳门楣示例"
+					},
+                culture: `魏姓是中华姓氏之一，在宋版《百家姓》中排行第30位。魏姓起源于西周初年周成王分封的姬姓伯爵诸侯国魏国。魏姓在历史上名人辈出，如战国时期魏国君主、唐代名相魏征等。`
+            },
+            "林": {
+                character: "林",
+                derivations: ["西河衍派", "九龙衍派", "金紫衍派"],
+                traditions: ["九牧传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/lin.jpg" ,
+					alt:"西河衍派门楣示例"
+					},
+                culture: `林姓是中国常见姓氏之一，在南方地区分布广泛。林姓源出子姓，是商朝贵族比干的后裔。林姓在福建、台湾等地尤为集中，有'陈林半天下'之说。`
+            },
+            "郑": {
+                character: "郑",
+                derivations: ["荣阳衍派", "荥水衍派"],
+                traditions: [],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zheng.jpg" ,
+					alt:"荣阳衍派门楣示例"
+					},
+                culture: `郑姓是中华姓氏之一，在宋版《百家姓》中排第7位。郑姓源出姬姓，周宣王封弟姬友于郑国，是为郑桓公。郑姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "黄": {
+                character: "黄",
+                derivations: ["紫云衍派", "莆阳衍派", "龙塘衍派"],
+                traditions: ["六叶传芳", "江夏传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/huang.jpg" ,
+					alt:"龙塘衍派门楣示例"
+					},
+                culture: `黄姓是中国常见姓氏之一，在南方分布广泛。黄姓源出嬴姓，是伯益的后代。黄姓在福建、广东、台湾等地尤为集中，在历史上名人众多。`
+            },
+            "苏": {
+                character: "苏",
+                derivations: ["眉山衍派", "庐山衍派"],
+                traditions: ["武功传芳", "阜阳传芳", "理学传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/su.jpg" ,
+					alt:"眉山衍派门楣示例"
+					},
+                culture: `在泉州繁华而喧闹的市井中，坐落这一座十分庄严而耀眼的宗祠------地处泉州胭脂巷（旧称燕支巷）的"苏氏宗闾"。"苏氏宗闾"是省级文物保护单位，是北宋时期著名政治家、科学家苏颂嫡系第十世苏唐舌于元代初年自同安徙居泉州燕支里之后裔的原居民地。那么，今天小编就带大家了解一下泉州苏氏的门楣文化。
+
+首先，作为"苏氏宗闾"中苏氏家族的重要成员苏颂，他的生平和成就也为苏氏家族赢得了"正简流芳"的美誉。苏颂一生从政，五十六年历经五朝，最后升至宰相，去世后被追谥为"正简"，其出生地同安因此有"正简流芳"的美誉。
+
+其次，"庐山衍派"也是泉州苏氏家族的支系之一。这一族群属于入闽始祖苏益的卢山派·青礁派系·虎渡支系。苏益本人是福建苏氏的肇基始祖，他于唐僖宗光启元年（885年）从河南光州固始县随王潮入闽，任泉州都统领军使，并在同安葫芦山肇基，其后代以"芦山"为堂号，形成了芦山衍派。所以，其实可以说，庐山衍派的苏姓发源地是现在的河南省市。而迄今苏氏芦山派裔已繁衍约700多万人，除主要分布在闽南地区外，在台湾、香港、澳门亦广泛分布，其中仅台湾地区就有70多万人；在泰国、缅甸、菲律宾、新加坡、马来西亚、美国、加拿大等国家也有分布。此外，苏氏后裔在元代和明代还迁移到了安溪"留天寨贺厝"和"安溪岭头"，与当地的其他姓氏一起耕作、种茶，进一步证明了苏氏家族在东南亚的影响力和其文化的传播。
+
+最后，"理学传芳"也是泉州苏氏家族常用的门楣之一。堂号"理学传芳"源自其家族成员陈紫峰的理学成就。陈紫峰是理学的代表人物之一，他的理学成就被视为家族的荣耀，因此"理学传芳"这一堂号被用来缅怀和传承陈紫峰的理学思想和成就。这一堂号的设立，不仅体现了苏氏家族对陈紫峰理学贡献的认可，也展示了家族对理学的重视和传承。`
+            },
+            "沈": {
+                character: "沈",
+                derivations: ["吴兴发祥", "吴兴衍派", "吴兴旧家", "固始家风", "梅山衍派", "韩水分支", "清苕发祥", "清苕世泽", "清苕衍派"],
+                traditions: [],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/shen.png" ,
+					alt:"吴兴衍派门楣示例"
+					},
+                culture: `沈姓是中华姓氏之一，在宋版《百家姓》中排第14位。沈姓源出姬姓，周文王第十子聃季被封于沈国，其后人以国为姓。沈姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "许": {
+                character: "许",
+                derivations: ["瑶林衍派", "高阳衍派", "蓬山衍派", "西花衍派"],
+                traditions: ["瑶林传芳", "太岳传芳", "侍御传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/xu.jpg" ,
+					alt:"瑶林衍派门楣示例"
+					},
+                culture: `在中华民族源远流长的姓氏长河中，许氏家族以其独特的魅力和深厚的底蕴，闪耀着璀璨的光芒。其中，"瑶林衍派"作为许氏的重要分支，承载着无数的家族故事和荣耀。今天，让我们跟着客从何处来实践团一起探寻瑶林衍派的起源及背后的历史故事，品一段姓氏传奇，看一脉家族荣光。
+
+瑶林许氏的起源可追溯到上古时期。据史书记载，许氏出自姜姓，为炎帝神农氏的后裔。许氏始祖文叔，是周武王时的开国功臣，因功被封于许国（今河南许昌），其后代便以国为姓，称许氏。
+
+唐朝时期，许爱担任官职左侍御，特别晋升为银青光禄大夫，还世袭了宣威将军一职。许爱育有三个儿子：长子叫许达，分支去了蓬山；次子叫许川，分支到了梧坑、可慕等乡（也就是西花派）；三子叫许泮，一直居住在石龟（即瑶林派）。他们的大灯号使用原名"瑶林"。
+
+石龟许厝的开基始祖是许爱，根据族谱记载，他是南绍陶公的裔孙。按照钱江族谱所记载，唐末时期家乡遭遇战乱，许氏全族遭到清剿，许爱带着姚、孙两位夫人进入晋江（据传孙夫人葬在漳州），起初居住在十七八都瑶林村（也就是现在的杨林）。后来，许爱查看地形，觉得此地狭小，没有发展前途，于是让他的女婿施典和女儿另外选择地方开基（施典是前港钱江的祖先，在唐朝末年担任秘书丞）。
+
+后来，许姓也从瑶林分徙到邻乡丁亭。为了纪念开基之地，所以凡是石龟（丁亭原名）所分出的许氏子孙都以"瑶林衍派"作为堂号。丁亭原本是杂姓居住的地方，住着王、花、陈和蔡等姓氏，自从许姓迁入后，许姓人丁兴旺，其他姓氏逐渐式微，或者迁徙到了外乡。后来，许姓便成为了晋江有名的大姓。
+
+如今，瑶林许氏的后裔遍布世界各地，他们在各自的领域中继续传承和发扬着家族的优秀传统。无论是在祖国的大江南北，还是在异国他乡，许氏始终铭记着自己的根，传承着"瑶林衍派"的家族故事与精神，以家族的荣誉为动力，表达对先祖的尊崇与敬仰。`
+            },
+            "洪": {
+                character: "洪",
+                derivations: ["敦煌衍派", "翁山衍派"],
+                traditions: ["三瑞传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/hong.jpg" ,
+					alt:"敦煌衍派门楣示例"
+					},
+                culture: `洪姓是中华姓氏之一，在宋版《百家姓》中排第184位。洪姓源出姬姓，是共工氏的后代。洪姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "施": {
+                character: "施",
+                derivations: ["钱江衍派", "浔海衍派"],
+                traditions: ["临濮传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ye-shi-xiao.jpg" ,
+					alt:"施氏衍派门楣示例"
+					},
+                culture: `施姓是中华姓氏之一，在宋版《百家姓》中排第23位。施姓源出姬姓，是春秋时期鲁惠公的后代。施姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "赵": {
+                character: "赵",
+                derivations: ["南阳衍派", "天水衍派", "星塔衍派"],
+                traditions: ["夹马传芳"],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zhao.jpg" ,
+					alt:"星塔衍派门楣示例"
+					},
+                culture: `在许多吴氏族人的门楣上，常常悬挂着"星塔衍派"的门楣。而星塔其实是泉州市晋江市的一个古村落名------星塔村，以地名为衍派和门楣，不由让我们想对星塔村有进一步的了解。
+
+在星塔村中内坐落这一座宗祠，大门的门楣上写着"吴氏宗祠"，但当我们走进祠堂，却发现大殿横梁上赫然挂着"赵氏家庙"的牌匾，而其中供奉的也无一不是赵氏祖先。这独特的丧葬习俗让我们感到困惑，在询问后我们才得知，"生吴死赵"的丧葬习俗与吴氏家族那段神秘的历史过往有关。
+
+听到"赵氏"，大家是否会不由联系到泱泱华夏五千年中一个繁荣的朝代------宋朝？是的，吴氏家族便与宋朝皇室有着密不可分的联系：星塔村的吴氏开基祖赵仕道便是宋太祖赵匡胤的第17世裔孙。其实泉州曾经是南宋外宗所在地。700多年前，正值宋末，元军攻入泉州城，对城内的3000多个南宋宗室族人和士大夫，进行了野蛮的大屠杀。在国破家亡之时，住在泉州一带的赵宋皇族全部男丁几乎惨遭杀害，只有为数不多的人幸免于难。而赵仕道为了躲避杀身之祸，连夜从晋江青阳，逃往安海，投奔母亲的娘家。躲过劫难的赵仕道，为感念外祖的救命之恩，临死前嘱咐子孙后代生前姓吴，死后恢复本姓，在墓碑和墓主上改为赵姓。这便是"生吴死赵"这一特殊丧葬习俗的由来。
+
+那"星塔衍派"又是如何成为吴氏家族的衍派呢？这难道与宋朝皇室的原因有关吗？答案是：不完全是。流落到安海的赵氏皇族先祖为了让后人铭记自己的皇室血统与这段难捱的苦难经历，确实极为看重星塔。但还有一部分重要原因是：迁入泉州后的赵氏皇族积极参与海外贸易，不断推动泉州港的进一步繁荣。同时随着时间推移，到元代至元二十六年（1289年），来泉州贸易的国家和地区近百个，海上贸易的深度与广度比南宋时期有了新的发展，刺桐港（即泉州港）进入了鼎盛期，云帆竞发，梯航万国。这一历史背景为泉州赵氏的发展提供了良好的环境和机遇，使得赵氏家族在泉州扎根并繁荣发展。因此这一衍派还是为了铭记赵氏家族一直以来为祖国港湾海外贸易发展以及自身家族繁荣作出的努力与成就。`
+            },
+            "庄": {
+                character: "庄",
+                derivations: ["天水衍派"],
+                traditions: ["锦绣传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zhuang.jpg" ,
+					alt:"锦绣衍派门楣示例"
+					},
+                culture: `在漫长的历史中，"锦绣传芳"就像一颗很亮的星星，展现着庄氏家族的光荣和出色。今天，客从何处来实践团为大家科普的门楣文化是"锦绣传芳"
+
+庄氏家族到福建的始祖是庄森，他老家在河南汝宁府光州固始。唐咸通六年（865年），庄森考中进士，靠着厉害的本事和聪明才智，不断升官，做到了广州都督、刺史。后来黄巢之乱爆发，光启年间（885年），庄森跟着王审知兄弟到了福建，负责镇守桐城（就是现在的泉州），最后住在了永春县桃源里善政乡蓬莱山（如今的湖洋镇），从此庄氏在福建开始了传奇的历程。
+
+过了些年，庄森的第九代孙子庄夏出现了。庄夏从小就特别聪明，淳熙八年（1181年）考中进士，进入官场。庄夏当官清廉，工作做得很好，是南宋孝宗、光宗、宁宗三朝的老臣，官做到兵部侍郎，宝谟焕章二阁待制。因为功劳大，被封为永春县开国男，有三百户的食邑，还被赐了紫金鱼袋，死后被追赠少师。庄夏祖父庄观的墓原来在永春湖洋的"鬼岫山"，宋宁宗觉得这名字不好听，就给改成了"锦绣山"。从这以后，庄氏的后代都把"御墨锦绣"当成特别了不起的荣耀，家族的名号也改成了"锦绣传芳"。
+
+庄氏家族人越来越多，发展得很好。他们分散到各地建村子的时候，喜欢用带"锦"字的名字，有的把村子叫这个，有的建"锦绣宗祠"，还有的在自家门楣上大大地写上"锦绣传芳"。这可不只是几个字，而是他们继承祖先的好品德，记住家族荣耀的方式。
+
+现在，不管是在闽南地区，还是在远一些的东南亚国家，要是看到哪家门楣上有"锦绣传芳"这几个明显的字，就知道这家人是从永春桃源的庄氏家族来的。这个传统不只是家族一代代人的延续，更是庄氏家族传承和荣耀的标志，有着很多很深的历史和文化意义，就像一部永远不停的故事，在时间的长河里一直闪耀着。`
+            },
+            "吕": {
+                character: "吕",
+                derivations: ["河东衍派"],
+                traditions: ["渭水流芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/lv.jpg" ,
+					alt:"渭水衍派门楣示例"
+					},
+                culture: `吕氏门楣文化（渭水流芳）
+
+在泉州这片充满历史韵味的土地上，吕氏家族的宅院静静地矗立，而门楣则是这宅院最引人注目的部分。它不仅是进出宅院的必经之路，更是吕氏家族身份与荣耀的象征。门楣不仅具有历史价值和文化意义，还是泉州古城区众多历史建筑中的一颗璀璨明珠。在泉州这座充满历史与文化底蕴的城市中，吕氏门楣以其独特的魅力和深厚的内涵吸引着无数游客前来探访。
+
+泉州吕氏的来源可以追溯到唐朝，其一世祖为吕占，是唐相吕湮之后。吕占随王审知入闽，初住泉州，后迁安海。在宋朝，泉州吕氏达到了鼎盛时期，出现了如吕夏卿、吕惠卿等著名人物。此外，泉州吕氏也与其他地方的吕氏一样，尊奉伯夷为姓氏始祖，其源流可以追溯到姜姓，伯夷因功被封于吕，其后人以吕为姓。这一源流体现了泉州吕氏与其他吕氏分支的共同渊源。
+
+"渭水流芳"与姜太公吕尚有关。传说周文王在磻溪遇到垂钓的吕尚，并聘其为帝师，辅助周朝建立。吕尚的故事成为吕氏家族的荣耀象征。泉州吕氏宗祠大门上的镌联"源宗渭水帝师世，派衍洛阳宰相家"即体现了这一点，横额"渭水流芳"更是对这一传统的颂扬。吕氏后人以此铭记先祖功德，并告诫自己和后人不要忘本忘根，希望流芳百世。
+
+自清代康熙年间开始，随着闽、粤地区吕氏族人向海外的迁徙，泉州吕氏也在世界各地播下了繁衍的种子，特别是在新加坡、菲律宾、马来西亚、印尼、泰国、文莱、越南、美国、加拿大等国家，都有泉州吕氏族人的身影。为了加强宗亲之间的联系和团结，海外泉州吕氏族人纷纷成立宗亲组织，如新加坡吕氏公会、香港渭滨宗亲会等，这些宗亲组织定期举办恳亲大会等活动，促进宗亲间的交流与合作，共同缅怀先祖，传承家族文化。`
+            },
+            "萧": {
+                character: "萧",
+                derivations: ["凤翼衍派", "兰陵衍派", "兰陵世家"],
+                traditions: ["八叶传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ye-shi-xiao.jpg" ,
+					alt:"萧氏衍派门楣示例"
+					},
+                culture: `萧姓是中华姓氏之一，在宋版《百家姓》中排第99位。萧姓源出子姓，是商朝贵族微子的后代。萧姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "郭": {
+                character: "郭",
+                derivations: ["汾阳衍派"],
+                traditions: ["西湖流芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/guo.jpg" ,
+					alt:"汾阳衍派门楣示例"
+					},
+                culture: `郭姓是中华姓氏之一，在宋版《百家姓》中排第144位。郭姓源出姬姓，是周文王弟虢叔的后代。郭姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "丁": {
+                character: "丁",
+                derivations: [],
+                traditions: ["蚊筑传芳", "聚书传芳", "忠孝传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ding.jpg" ,
+					alt:"聚书传芳门楣示例"
+					},
+                culture: `丁姓是中华姓氏之一，在宋版《百家姓》中排第177位。丁姓源出姜姓，是齐太公吕尚的后代。丁姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "吴": {
+                character: "吴",
+                derivations: ["延陵衍派"],
+                traditions: ["让德传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/wu.jpg" ,
+					alt:"延陵衍派门楣示例"
+					},
+                culture: `吴姓是中国常见姓氏之一，源出姬姓，是周太王古公亶父的后代。吴姓始祖泰伯、仲雍让位给弟弟季历，南下建立吴国，成为吴姓的起源。"让德传芳"体现了吴姓家族的谦让美德。`
+            },
+            "刘": {
+                character: "刘",
+                derivations: ["彭城衍派"],
+                traditions: ["禄阁传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/liu.jpg" ,
+					alt:"彭城衍派门楣示例"
+					},
+                culture: `刘姓是中国常见姓氏之一，源出祁姓，是尧的后裔。刘姓建立了中国历史上最强盛的汉朝，对中国历史和文化产生了深远影响。刘姓在历史上人才辈出，包括汉高祖刘邦、汉武帝刘彻、蜀汉刘备等。`
+            },
+            "曾": {
+                character: "曾",
+                derivations: ["龙山衍派"],
+                traditions: ["三省传芳"],
+                lintels:{
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zeng.jpg" ,
+					alt:"龙山衍派门楣示例"} ,
+                culture: `曾姓是中华姓氏之一，在宋版《百家姓》中排第385位。曾姓源出姒姓，是夏朝君主少康的后代。曾姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "蒋": {
+                character: "蒋",
+                derivations: ["福全衍派"],
+                traditions: ["福全传芳"],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/jiang.jpg" ,
+					alt:"福全衍派门楣示例"
+					},
+                culture: `当你来到地图上标注的"福全之地"，你会发现这不仅是一个地名那样简单，它是一把钥匙，打开通往福建蒋氏家族悠久历史的大门。在福建这片历史悠久、文化底蕴深厚的土地上，姓氏文化作为中华民族传统文化的重要组成部分，一直深受人们的重视和传承。其中，"福全衍派"作为福建蒋氏的一个特定标识，不仅承载了蒋氏家族的历史渊源，也体现了福建地区独特的姓氏文化传承方式。今天客从何处来实践团带为大家科普的是福建蒋氏以及福全衍派。
+
+福建蒋氏作为蒋氏家族的一个重要分支，其历史渊源可以追溯到中原地区。随着历史上中原和北方居民的大量南迁，蒋氏家族也逐渐迁徙至福建地区，并在这里生根发芽，繁衍生息。在福建这片土地上，蒋氏家族不仅继承了中原文化的精髓，还融合了当地的文化特色，形成了独具特色的福建蒋氏文化，归纳起来福建蒋姓四大宗支十大衍派：
+
+一、蒋横长子蒋颖宗支，蒋德义一个衍派，始祖：蒋德义
+
+二、蒋横第七子蒋稔宗支，分为五个衍派。蒋 高衍派，入闽始祖：蒋高；蒋 吉衍派，屿头妈祖：蒋吉；蒋 旺衍派，福全始祖：蒋旺；蒋 绍衍派，永泰始祖：蒋绍；蒋钟英衍派，龙岩始祖；蒋子禄。
+
+三、蒋横第八子蒋默宗支，蒋子慎衍派，入闽始祖；蒋子慎。
+
+四、蒋横第九子蒋澄宗支，分为三个衍派。蒋之绐衍派，浦城始祖：蒋之绐。蒋渊、蒋陆衍派，莆仙始祖：蒋渊、蒋陆。蒋木衍派，边城始祖：蒋木。
+
+"福全衍派"中的"衍派"一词，在姓氏文化中通常指代姓氏的发源、渊源或支脉。福建蒋氏的"福全衍派"，是蒋氏家族在福建地区繁衍发展过程中形成的一个特定支脉或分支。"福全衍派"作为福建蒋氏的一个特定标识，不仅承载了蒋氏家族的历史渊源和文化内涵，也体现了福建地区独特的姓氏文化传承方式。在当今社会，随着人们对传统文化的重视程度不断提高，"福全衍派"等姓氏文化标识也将继续发挥着重要的作用，为后人留下宝贵的文化遗产和精神财富。`
+            },
+            "胡": {
+                character: "胡",
+                derivations: [],
+                traditions: ["安定传芳"],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/hu.png" ,
+					alt:"安定传芳门楣示例"
+					},
+                culture: `胡姓是中华姓氏之一，在宋版《百家姓》中排第158位。胡姓源出妫姓，是舜帝的后代。胡姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "康": {
+                character: "康",
+                derivations: ["会稽衍派"],
+                traditions: [],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/kang.jpg" ,
+					alt:"会稽衍派门楣示例"
+					},
+                culture: `看衍派知姓氏，康氏作为中华古老的姓氏之一，在繁衍播迁过程中形成了京兆、会稽、东平、华山、晋阳五大郡望，这五大郡望就代表古代康氏的五大宗支。今天客从何处来实践团要跟大家分享的是百家姓中的"康"姓，常见的衍派传芳有：会稽衍派、京兆衍派、东平衍派。
+
+清代大儒孙星衍在《校补元和姓纂辑本序》中就强调指出："姓氏与郡望相属，乃知宗派所出。""相属"意思是互相联系起来，也就是说，郡望、堂号与祖根族源是密不可分的，考查郡望和堂号，可以知道自己的宗派出自哪里。
+
+郡是中国古代的行政区划单位。"望"指望族，指有地位有声望的名门贵族，是累世显贵为人所仰望的家族。最初，郡望指一郡之中的望族。这些家族累世聚族而居，人口众多，代代不乏仕宦之人，地位显赫，门第高贵，为世人仰慕、敬重。经过不断发展演变之后，郡望有了新的含义，它用来指一个家族的发祥地和根源地。百家姓中常见的大姓，都有自己的郡望，康姓当然也不例外。
+
+会稽郡：时间是中唐时期。秦始皇时置郡，治所在吴县（今江苏省苏州市），包有江南、浙江大部及皖南一部。汉顺帝时移治山阴（今浙省江绍兴）。西汉更包有浙、闽全部。东汉永建四年（129年）分吴、会稽为二郡，会稽移治山阴（今绍兴），有浙闽之地（今杭嘉湖均属吴郡）。三国吴分设临海（台州）等郡后，辖境缩小。隋为越州。又隋分山阴县置会稽县。民国合二县为绍兴县。来自康日知派支和康希铣派支。
+
+会稽堂：唐朝时有康志睦，身材魁梧，善于骑马射箭，官大将军。后来讨平张韶，升平卢节度使，又平了李同捷的叛乱，加检校尚书右仆射，封为会稽郡公。康姓因以"会稽"为其堂号。
+
+康姓，是多民族多源流姓氏，相传最早出自姬姓，可追溯到距今3000余年的西周时代。据《史记·卫康叔世家》载，周武王姬发的同胞弟姬封，西周初被封于康城，后人称其康叔。姬封勤政爱民，治国有方，为民众所爱戴，死后谥号"康"，子孙便以其谥号为姓，或以封邑为氏。`
+            },
+            "徐": {
+                character: "徐",
+                derivations: [],
+                traditions: ["东海传芳"],
+                lintels: [],
+                culture: `徐姓是中华姓氏之一，在宋版《百家姓》中排第150位。徐姓源出嬴姓，是伯益的后代。徐姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "董": {
+                character: "董",
+                derivations: ["千秋良史"],
+                traditions: ["圈龙传芳"],
+                lintels: ["千秋良史"],
+                culture: `"豢龙传芳"
+
+据相关传说，在舜帝时期，董父对龙的习性很有研究，擅长养龙。舜帝得知后，让董父展示养龙技艺，董父成功地让龙进行了表演，舜帝非常高兴，当即赐董父姓"董"，并任命他为"豢龙氏"，让他专门负责养龙。其后代便以"豢龙"为家族的荣耀和标志，将"豢龙传芳"作为家族的一种象征，以铭记和传承董父养龙的事迹和技艺。
+
+例如，在山西省闻喜县，流传着董父豢龙的故事。传说龙非甘泉不饮，董父在董泽湖找到甘泉后，便在此地向阳结庐而居，该地水也因此更名为董泽湖，董父居所被命名为董泽里。为便于观察龙的活动，董父还筑观龙阁。后来，帝舜亲谒董泽赏龙，董父又建赏龙亭迎帝赏龙。帝舜看到群龙驯养有素，观赏后赞叹不已。
+
+董泽里是董氏家族的发祥地，自帝舜赐姓董父迄今已四千余年。唐大历八年（766年），董父后裔为弘扬祖德，激励后世，在祖居董泽里建有"豢龙祠"即"董池圣母庙"。金大定十一年（1711年），董氏后裔又在"豢龙祠"内建立"董氏宗谱碑楼"。
+
+《后纪》卷八又云："有叔安异（裔）封于董，董甫（父同）以豢龙事舜，封于鬷川，别为鬷邑，更为关龙，音豢龙。豢龙同关龙，龙逢其后也。廖、董、关龙，则夏灭之，鬷则商灭之。"
+
+《昭公二十九年》《左传》又云："帝舜氏世有畜龙，及（有）夏孔甲③，扰于有帝。帝赐之乘龙，河汉各二，各有雌雄。孔甲不能食，而未获豢龙氏。陶唐氏既衰，其后有刘累学扰龙于豢龙氏，以事孔甲，能饮食之，夏后嘉之，赐姓（氏）曰御龙，以更豕韦之后。龙一雌死，潜醢[hǎi]以食夏后。夏后飧之，既而使求之，惧而迁于鲁县，范氏其后也。"
+
+《寰宇记》云："今长葛西四十里，临颖县有豢龙城，豢龙氏邑也。而汝之龙兴东南五十里，又有豢龙城，长垣东南龙城，灵宝西南七里有豢龙坟。"`
+            },
+            "何": {
+                character: "何",
+                derivations: ["庐江衍派"],
+                traditions: [],
+                lintels: ["庐江衍派"],
+                culture: `何姓是中华姓氏之一，在宋版《百家姓》中排第21位。何姓源出姬姓，是周文王的后代。何姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "杜": {
+                character: "杜",
+                derivations: [],
+                traditions: ["瀛洲传芳"],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/du.jpg" ,
+					alt:"瀛洲传芳门楣示例"
+					},
+                culture: `杜姓是中华姓氏之一，在宋版《百家姓》中排第129位。杜姓源出祁姓，是尧的后代。杜姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "肖": {
+                character: "肖",
+                derivations: [],
+                traditions: ["兰陵传芳"],
+                lintels: {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/xiao.jpg" ,
+					alt:"兰陵传芳门楣示例"
+					},
+                culture: `肖姓是中华姓氏之一，在历史上与萧姓有密切关系。肖姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "留": {
+                character: "留",
+                derivations: [],
+                traditions: ["镇闽传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/liu2.jpg" ,
+					alt:"镇闽传芳门楣示例"
+					},
+                culture: `留姓是中华姓氏之一，较为罕见。留姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "范": {
+                character: "范",
+                derivations: ["高平衍派"],
+                traditions: [],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/fan.jpg" ,
+					alt:"高平衍派门楣示例"
+					},
+                culture: `范姓是中华姓氏之一，在宋版《百家姓》中排第46位。范姓源出祁姓，是尧的后代。范姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "史": {
+                character: "史",
+                derivations: [],
+                traditions: ["溧阳传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/shi.jpg" ,
+					alt:"溧阳传芳示例"
+					},
+                culture: `史姓是中华姓氏之一，在宋版《百家姓》中排第63位。史姓源出姬姓，是周文王的后代。史姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "卢": {
+                character: "卢",
+                derivations: ["范阳衍派"],
+                traditions: [],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/lu.jpg" ,
+					alt:"范阳衍派门楣示例"
+					},
+                culture: `卢姓是中华姓氏之一，在宋版《百家姓》中排第167位。卢姓源出姜姓，是齐太公吕尚的后代。卢姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "谢": {
+                character: "谢",
+                derivations: [],
+                traditions: ["宝树传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/xie.jpg" ,
+					alt:"宝树传芳门楣示例"
+					},
+                culture: `谢姓是中华姓氏之一，在宋版《百家姓》中排第34位。谢姓源出姜姓，是炎帝的后代。谢姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "欧阳": {
+                character: "欧阳",
+                derivations: [],
+                traditions: ["锦江传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ouyang.jpg" ,
+					alt:"锦江传芳门楣示例"
+					},
+                culture: `欧阳姓是中华复姓之一，在宋版《百家姓》中排第412位。欧阳姓源出姒姓，是越王勾践的后代。欧阳姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "戴": {
+                character: "戴",
+                derivations: [],
+                traditions: ["谯国传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/dai.jpg" ,
+					alt:"谯国传芳门楣示例"
+					},
+                culture: `戴姓是中华姓氏之一，在宋版《百家姓》中排第116位。戴姓源出子姓，是商朝君主汤的后代。戴姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            },
+            "柯": {
+                character: "柯",
+                derivations: [],
+                traditions: ["瑞鹊传芳"],
+                lintels:  {
+					src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/.jpg" ,
+					alt:"颍川衍派门楣示例"
+					},
+                culture: `柯姓是中华姓氏之一，在宋版《百家姓》中排第164位。柯姓源出姬姓，是周文王的后代。柯姓在历史上名人辈出，对中国文化发展有重要贡献。`
+            }
+        };
+
+        // DOM元素
+        const surnameInput = document.getElementById('surnameInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const noResults = document.getElementById('noResults');
+        const surnameChar = document.getElementById('surnameChar');
+        const surnameName = document.getElementById('surnameName');
+        const derivationList = document.getElementById('derivationList');
+        const traditionList = document.getElementById('traditionList');
+        const lintelList = document.getElementById('lintelList');
+        const cultureContent = document.getElementById('cultureContent');
+        const surnameTags = document.querySelectorAll('.surname-tag');
+
+        // 搜索功能
+        searchBtn.addEventListener('click', performSearch);
+        surnameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // 热门姓氏标签点击事件
+        surnameTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                const surname = this.getAttribute('data-surname');
+                surnameInput.value = surname;
+                performSearch();
+            });
+        });
+
+        // 执行搜索
+        function performSearch() {
+            const surname = surnameInput.value.trim();
+            
+            if (!surname) {
+                alert('请输入要查询的姓氏');
+                return;
+            }
+            
+            if (surnameData[surname]) {
+                displayResults(surnameData[surname]);
+            } else {
+                showNoResults();
+            }
+        }
+
+        // 显示查询结果
+        function displayResults(data) {
+            // 更新姓氏信息
+            surnameChar.textContent = data.character;
+            surnameName.textContent = data.character + '姓';
+            
+            // 更新衍派信息
+            derivationList.innerHTML = '';
+            if (data.derivations && data.derivations.length > 0) {
+                data.derivations.forEach(derivation => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-code-branch"></i> ${derivation}`;
+                    derivationList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-code-branch"></i> 暂无衍派信息`;
+                derivationList.appendChild(li);
+            }
+            
+            // 更新传芳信息
+            traditionList.innerHTML = '';
+            if (data.traditions && data.traditions.length > 0) {
+                data.traditions.forEach(tradition => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-leaf"></i> ${tradition}`;
+                    traditionList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-leaf"></i> 暂无传芳信息`;
+                traditionList.appendChild(li);
+            }
+            
+            // 更新门楣文化信息
+            // 更新门楣文化信息（修改后）
+lintelList.innerHTML = '';
+// 1. 先判断 lintels 是否存在
+if (data.lintels) {
+    // 2. 情况1：如果是对象（李姓的图片格式），渲染图片
+    if (typeof data.lintels === 'object' && !Array.isArray(data.lintels)) {
+        const li = document.createElement('li');
+        // 插入 img 标签，使用对象中的 src 和 alt
+        li.innerHTML = `
+            <i class="fas fa-archway"></i> 
+            <img src="${data.lintels.src}" alt="${data.lintels.alt}" style="width: 100%; max-width: 300px; margin-top: 10px; border: 1px solid #eee; border-radius: 4px;">
+        `;
+        lintelList.appendChild(li);
+    } 
+    // 3. 情况2：如果是数组（其他姓氏的文字格式），渲染文字
+    else if (Array.isArray(data.lintels) && data.lintels.length > 0) {
+        data.lintels.forEach(lintel => {
+            const li = document.createElement('li');
+            li.innerHTML = `<i class="fas fa-archway"></i> ${lintel}`;
+            lintelList.appendChild(li);
+        });
+    }
+    // 4. 情况3：数组为空
+    else {
+        const li = document.createElement('li');
+        li.innerHTML = `<i class="fas fa-archway"></i> 暂无门楣文化信息`;
+        lintelList.appendChild(li);
+    }
+} 
+// 5. 情况4：lintels 不存在
+else {
+    const li = document.createElement('li');
+    li.innerHTML = `<i class="fas fa-archway"></i> 暂无门楣文化信息`;
+    lintelList.appendChild(li);
+}
+            // 更新文化简介
+            cultureContent.textContent = data.culture;
+            
+            // 显示结果区域
+            resultsSection.style.display = 'block';
+            noResults.style.display = 'none';
+            
+            // 滚动到结果区域
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 显示无结果
+        function showNoResults() {
+            resultsSection.style.display = 'none';
+            noResults.style.display = 'block';
+            
+            // 滚动到无结果区域
+            noResults.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
