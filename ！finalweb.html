@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华姓氏文化查询系统 - 完整版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* [核心样式保持不变] */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'STKaiti', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f3e9 0%, #e8d9c5 100%);
+            min-height: 100vh;
+            color: #5c3713;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid #8B0000;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #8B0000, #B22222, #8B0000);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .decorative-border {
+            height: 8px;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+            margin: 15px 0;
+        }
+        
+        .search-section {
+            padding: 30px 20px;
+            text-align: center;
+            background-color: #f8f4ec;
+        }
+        
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            font-size: 1.1rem;
+            outline: none;
+            background: white;
+        }
+        
+        .search-box button {
+            background: linear-gradient(90deg, #8B0000, #B22222);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-box button:hover {
+            background: linear-gradient(90deg, #B22222, #8B0000);
+        }
+        
+        .popular-surnames {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .surname-tag {
+            background: linear-gradient(135deg, #8B0000, #B22222);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .surname-tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .results-section {
+            padding: 30px 20px;
+            display: none;
+        }
+        
+        .surname-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .surname-character {
+            font-size: 5rem;
+            color: #8B0000;
+            margin-bottom: 10px;
+            font-family: 'STKaiti', serif;
+        }
+        
+        .surname-name {
+            font-size: 2rem;
+            color: #5c3713;
+        }
+        
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid #8B0000;
+        }
+        
+        .info-card h3 {
+            color: #8B0000;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.3rem;
+        }
+        
+        .info-list {
+            list-style-type: none;
+        }
+        
+        .info-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .info-list li i {
+            color: #8B0000;
+            margin-right: 10px;
+        }
+        
+        .culture-section {
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .culture-section h3 {
+            color: #8B0000;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* 新增：归属声明样式 */
+        .attribution-note {
+            color: #8B0000;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-left: 5px solid #B22222;
+            background-color: #f8f4ec;
+            border-radius: 4px;
+            display: none; /* 默认隐藏，通过 JS 控制显示 */
+            text-align: left;
+        }
+        
+        .culture-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 15px;
+            white-space: pre-wrap;
+        }
+        
+        .culture-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .culture-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .culture-content::-webkit-scrollbar-thumb {
+            background: #8B0000;
+            border-radius: 4px;
+        }
+        
+        .culture-content::-webkit-scrollbar-thumb:hover {
+            background: #B22222;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .no-results h3 {
+            color: #5c3713;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f4ec;
+            color: #5c3713;
+            border-top: 1px solid #e8d9c5;
+        }
+        
+        /* 浮动按钮样式 */
+        #quizWidget {
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .floating-button {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .floating-button i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .floating-button:hover {
+            background: linear-gradient(135deg, #0056b3, #007bff);
+            transform: scale(1.05);
+        }
+
+        #chatWidget {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        #chatTrigger {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        #chatTrigger:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        #avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            border: 2px solid #8B0000;
+        }
+        
+        .chat-prompt {
+            color: #8B0000;
+            font-size: 0.95rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .surname-character { font-size: 4rem; }
+            .info-cards { grid-template-columns: 1fr; }
+            #chatWidget { bottom: 10px; right: 10px; }
+            #quizWidget { bottom: 70px; right: 10px; }
+        }
+        
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.7rem; }
+            .search-box { flex-direction: column; border-radius: 10px; }
+            .search-box input, .search-box button { width: 100%; border-radius: 0; }
+        }
+		/* === 最终优化版：精致胶片长廊样式 === */
+        .scroll-gallery-section {
+            margin-top: 30px;
+            padding: 20px 0; /* 减小上下间距 */
+            background: #fdfbf7; /* 更素雅的背景，不抢眼 */
+            border-top: 1px solid #e8d9c5; /* 极细的分割线 */
+            position: relative;
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.02);
+        }
+
+        .section-header h3 {
+            font-size: 1.2rem; /* 标题字号改小 */
+            margin-bottom: 5px;
+            color: #8B0000;
+        }
+        
+        /* 来源声明也改小一点 */
+        .source-badge {
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .scroll-container {
+            width: 100%;
+            padding: 15px 0;
+            position: relative;
+            /* 两侧虚化遮罩，保留高级感 */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        }
+
+        .scroll-track {
+            display: flex;
+            gap: 20px; /* 间距缩小 */
+            width: max-content;
+            /* 之前漏掉的就是这个动画定义，现在补全了 */
+            animation: scroll-left 60s linear infinite; /* 速度调慢一点，更优雅 */
+            padding-left: 0;
+        }
+
+        .scroll-track:hover {
+            animation-play-state: paused;
+        }
+
+        /* 图片改为“胶片”风格 */
+        .scroll-track img {
+            height: 110px; /* 【关键】高度减半！ */
+            width: auto;
+            border-radius: 3px;
+            /* 去掉厚重的白边框，改为轻盈的阴影 */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: sepia(15%); /* 淡淡的怀旧感 */
+            border: 1px solid #eee;
+        }
+
+        .scroll-track img:hover {
+            transform: scale(1.05); /* 悬停只需微微放大 */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            filter: sepia(0%);
+            z-index: 10;
+        }
+
+        /* === 【必须补全】这就是之前让它动不起来的原因 === */
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                /* 这里的 -50% 配合 JS 的克隆逻辑，实现无缝循环 */
+                transform: translateX(-50%);
+            }
+        }
+        /* 来源声明样式优化：去掉红框，改为优雅的底部文字 */
+        .source-badge {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #886;
+            font-style: italic;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .source-badge::before, .source-badge::after {
+            content: "——";
+            color: #ccc;
+            margin: 0 10px;
+        }
+		/* =========================================
+           === 补全：灯箱（大图弹窗）核心样式 ===
+           ========================================= */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 关键：固定在屏幕上，不随页面滚动 */
+            z-index: 10000; /* 层级最高，盖住所有内容 */
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9); /* 黑色半透明背景 */
+            backdrop-filter: blur(5px); /* 背景模糊，增加高级感 */
+        }
+
+        /* 弹出来的大图样式 */
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 1000px; /* 限制最大宽度 */
+            max-height: 90vh; /* 限制高度不超过屏幕的90% */
+            object-fit: contain; /* 保持图片比例，不拉伸 */
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border: 2px solid #fff;
+            animation: zoomIn 0.3s; /* 弹出动画 */
+        }
+
+        /* 右上角关闭按钮 X */
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            z-index: 10001;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 弹出动画定义 */
+        @keyframes zoomIn {
+            from {transform: scale(0.1); opacity: 0;} 
+            to {transform: scale(1); opacity: 1;}
+        }
+
+        /* 手机端适配 */
+        @media only screen and (max-width: 700px){
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>中华姓氏文化查询系统</h1>
+            <div class="decorative-border"></div>
+            <p>探索中华姓氏源流，了解衍派传芳，传承门楣文化</p>
+        </header>
+        
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="surnameInput" placeholder="请输入您要查询的姓氏...">
+                <button id="searchBtn"><i class="fas fa-search"></i> 查询</button>
+            </div>
+            
+            <p>热门姓氏：</p>
+            <div class="popular-surnames">
+                <div class="surname-tag" data-surname="李">李</div>
+                <div class="surname-tag" data-surname="王">王</div>
+                <div class="surname-tag" data-surname="张">张</div>
+                <div class="surname-tag" data-surname="刘">刘</div>
+                <div class="surname-tag" data-surname="陈">陈</div>
+                <div class="surname-tag" data-surname="杨">杨</div>
+                <div class="surname-tag" data-surname="黄">黄</div>
+                <div class="surname-tag" data-surname="蔡">蔡</div>
+                <div class="surname-tag" data-surname="周">周</div>
+                <div class="surname-tag" data-surname="吴">吴</div>
+                <div class="surname-tag" data-surname="郭">郭</div>
+                <div class="surname-tag" data-surname="朱">朱</div>
+            </div>
+        </section>
+        
+        <section class="results-section" id="resultsSection">
+            <div class="surname-header">
+                <div class="surname-character" id="surnameChar">李</div>
+                <h2 class="surname-name" id="surnameName">李姓</h2>
+            </div>
+            
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3><i class="fas fa-code-branch"></i> 衍派信息</h3>
+                    <ul class="info-list" id="derivationList"></ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-leaf"></i> 传芳信息</h3>
+                    <ul class="info-list" id="traditionList"></ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-archway"></i> 门楣文化</h3>
+                    <ul class="info-list" id="lintelList"></ul>
+                </div>
+            </div>
+            
+            <div class="culture-section">
+                <h3><i class="fas fa-book"></i> 闽南门楣文化大观园</h3>
+
+                <div class="attribution-note" id="attributionNote">
+                    <i class="fas fa-info-circle"></i> 补充信息来源于其他实践团和网络检索
+                </div>
+                <div class="culture-content" id="cultureContent"></div>
+            </div>
+        </section>
+        
+        <section class="no-results" id="noResults">
+            <i class="fas fa-search"></i>
+            <h3>未找到相关姓氏信息</h3>
+            <p>请尝试输入其他姓氏或检查输入是否正确</p>
+        </section>
+        <section class="scroll-gallery-section">
+            <div class="section-header">
+                <h3><i class="fas fa-camera-retro"></i> 姓氏堂号门匾 · 街巷实景文化影像长廊</h3>
+                
+                
+            </div>
+            
+            <div class="scroll-container">
+                <div class="scroll-track" id="scrollTrack">
+                    <img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real1.png" alt="门匾实景">
+                    <img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real2.png" alt="门匾实景">
+                    <img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real3.png" alt="门匾实景">
+                    <img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real4.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real5.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real6.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real7.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real8.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real9.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real10.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real11.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real12.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real13.png" alt="门匾实景">
+                    <img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real14.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real15.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real16.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real17.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real18.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real19.png" alt="门匾实景">
+					<img src="https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/real20.png" alt="门匾实景">
+                    </div>
+            </div>
+			<div class="source-badge">
+                    <span><i class="fas fa-info-circle"></i> 影像来自网络搜索及其他实践团案例</span>
+                </div>
+        </section>
+
+        <div id="imageModal" class="modal">
+            <span class="close-modal">&times;</span>
+            <img class="modal-content" id="modalImg">
+        </div>
+        <footer>
+            <p>中华姓氏文化查询系统 &copy; 2025 | 数据来源于姓氏文化研究数据库</p>
+        </footer>
+    </div>
+    
+    <a href="https://wyy2004-hqu.github.io/webtest/finalgame.html" id="quizWidget" class="floating-button">
+        <i class="fas fa-graduation-cap"></i> 前往知识问答页面
+    </a>
+
+    <a href="https://www.coze.cn/s/UNkPelJwkjM/" id="chatWidget">
+        <div id="chatTrigger">
+            <img id="avatar" src="./IP.jpg" alt="智能体头像">
+            <span class="chat-prompt">点击我前往智能对话</span>
+        </div>
+    </a>
+    <script>
+        // 标记哪些姓氏是“补充”的，需要显示归属声明
+        const supplementalSurnames = new Set([
+            "张", "卓", "朱", "周", "钟", "郑", "章", "詹", "粘", "俞", "余", "尤", "叶", "姚", "颜", "薛", "徐", "熊", "辛", 
+            "谢", "萧", "夏", "伍", "吴", "翁", "温", "魏", "汪", "万", "涂", "田", "唐", "汤", "孙", "苏", "史", "石", "施", 
+            "沈", "邵", "尚", "阮", "丘", "彭", "潘", "欧阳", "倪", "毛", "马", "骆", "罗", "吕", "卢", "柳", "留", "刘", "林", 
+            "廖", "梁", "连", "雷", "赖", "柯", "康", "蒋", "姜", "江", "简", "纪", "黄", "胡", "侯", "洪", "贺", "何", "郭", 
+            "关", "顾", "龚", "高", "富", "傅", "冯", "方", "范", "杜", "董", "白", "蔡", "车", "程", "出", "戴", "邓", "丁" 
+        ]);
+        
+        // 完整的姓氏数据库，已根据提供的《衍派传芳细则》进行扩充、图片更新和归属声明分离
+        const surnameData = {
+            "李": {
+                character: "李",
+                derivations: ["陇西衍派", "梧桐衍派"],
+                traditions: ["沙堤传芳", "凤竹传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/li.jpg" , alt:"陇西衍派门楣示例" },
+                culture: `李氏溯源久远，经历几千年的繁衍，如今全世界李氏宗亲在一亿人以上。史籍记载，李氏郡望有13个，即:陇西、赵郡、柳城、略阳、鸡田、武威、代北、高丽、范阳、渤海、西域、河南、京兆等。其中，陇西与赵郡这两支郡望名声最大，今天下李氏多出自这两支。\n陇西李氏根在陇西狄道，今甘肃临洮。据《人民日报》(1992年8月27日)报道"李氏根基在陇西"，已正式批准在陇西修复李氏"陇西堂"。现在，泉州城乡乃至台湾、东南亚的李氏人家，大都在大门匾额上镌刻着"陇西衍派"，以示不忘祖源。\n李氏入闽，最早进入闽南的陇西李氏为谁，也有不同说法。但宗奉五山君怀公者人数最多。李君怀，唐宗室越江王李元祥之后。因军功由泉州路万户府参军，擢为濠州节度使，再迁五州节度使，罹病归里疗治，仍上书《施政疏》三千言，深得南宋宁宗嘉许，逝世后诰封南靖王。\n陇西李氏的繁衍壮大和中华民族的大融合是一个同步的历史进程。"陇西衍派"堂号下所聚集的李氏是一个多民族大联合的大群体。陇西李氏非凡的凝聚力正是中华民族强大凝聚力的具体见证。`
+            },
+            "王": {
+                character: "王",
+                derivations: ["太原衍派", "开闽衍派", "贵峰衍派", "青阳衍派"],
+                traditions: ["开闽传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/testw.jpg" , alt:"开闽衍派门楣示例" },
+                culture: `"您贵姓，您是哪里人?"关乎血脉的追问，使得博大精深的姓氏文化成了重要载体。为防止血缘关系紊乱而导致家族瓦解，家谱中清晰记载着衍派传芳、堂号和字辈，其中最显而易见的衍派与传芳便刻在了闽南人家的门楣上。闽南人的姓氏大致可分为三大来源，一是中原士族三次入闽，以闽南十大姓为主，二是唐以前的原住居民闽越人，"蓝、钟、雷、盘"等，三则是宋元时期异族定居闽南"蒲、丁"等20多姓。\n每个宗族在迁徙和发展的过程中，不但衍生出姓氏的支脉，也出现了不少足以垂范于后世的贤才俊杰。所谓衍派，就是姓氏的发源或是支脉；传芳则是延续祖德，光宗耀祖的某种标识，即使相同的衍派也有不一样的传芳。\n开闽王氏，当今王氏中最大的一支。开闽王氏是指入闽三王：广武王---王潮、武肃王------王审邽、忠懿王---王审知的后裔家族集团，开闽王氏其先源是琅琊王氏流脉，来自河南光州固始县。据福建《忠懿王氏族谱》，公元885年王潮、审邽、审知三兄弟率领中原子弟入闽，至公元909年建立闽国，其三兄弟中的王审知又为开闽王，被世人尊称为"开闽第一"。\n堂号---开闽衍派。之所以说开闽王氏著名，在于王氏三兄弟起于草莽，自故土河南固始南下福建，建立闽国。给予福建一个全新的定位，从之前的蛮荒到闽国之后的繁华。短短两百多年之后的世界第一大港泉州刺桐港正是建立在闽国海外贸易的基础之上。可以这么三王主政时期开拓了福建以海洋文化为特色的局面。也因此勇敢拼搏的开闽王氏后裔遍布海外各国，现代国家新加坡的第一任民选总统鼎昌公把千年之前祖先勇于开拓拼搏的精神再一次向世人展现，这是王氏家族最年轻的成员------开闽王氏的骄傲。`
+            },
+            "陈": {
+                character: "陈",
+                derivations: ["颍川衍派", "南湖衍派", "南山衍派", "官山衍派", "太邱衍派", "陈江衍派", "涵江衍派", "贞格衍派"],
+                traditions: ["颍水传芳", "飞钱传芳", "南院传芳", "玉湖传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/photochen.jpg" , alt:"颍川衍派门楣示例" },
+                culture: `在闽南及台湾地区的民居中，我们常能在门额上看到"颍川衍派"、"颍川世胄"、"颍水传芳"等字样，这些均是对陈姓先祖和颍川故地的敬仰与传承。今天客从何处来实践团要为大家科普的是颍川衍派的由来以及百家姓中陈氏的历史渊源。\n"颍川衍派"是中国传统社会中一个具有深厚历史和文化底蕴的宗派称谓，特指陈姓中的一支。颍川，古郡名，位于今天的河南省禹州市一带，因发源于河南嵩山的颍水而得名。秦王政十七年（公元前230年）置颍川郡，此后颍川成为中原地区的重要政治、经济和文化中心。\n陈氏是中国古老的姓氏之一，历史悠久，源远流长。据史书记载，陈氏主要得姓于周朝初年的陈胡公满。胡公满是三皇五帝之一的虞舜的后代，因封于陈地（今河南开封以东，安徽亳县以北），故以国为氏，称为陈氏。陈氏血脉中不乏仁德之君和杰出人物。如舜帝以仁德治天下，南朝陈的开国皇帝陈霸先，被誉为南朝第一英主。\n颍川陈氏，作为陈氏中的一支，尤为显赫。自陈胡公满封陈以来，陈氏子孙在颍川地区繁衍生息，逐渐形成了名门望族。东汉时期的陈寔，是颍川陈氏的重要代表人物，他德高望重，名倾天下，被后世尊为颍川陈氏的始祖。陈寔的子孙在汉魏时期也多有建树，如陈群、陈泰等人均是当时的名臣。\n"颍川衍派"不仅是陈氏子孙对先祖和故地的敬仰与传承，更是中华民族悠久历史和灿烂文化的见证。`
+            },
+            "张": {
+                character: "张",
+                derivations: ["清河衍派", "曲江衍派", "鉴湖衍派", "锦田衍派"],
+                traditions: [],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/testzhang.jpg" , alt:"清河衍派门楣示例" },
+                culture: `张姓是中国常见姓氏之一，历史悠久。清河衍派是张姓的重要分支之一，曲江衍派和鉴湖衍派也是张姓的重要支系。张姓在历史上名人辈出，对中国文化发展有重要贡献。
+清河衍派：张氏得姓历史悠久，主要源自姬姓，出自上古黄帝之孙张挥。张挥是古代重要武器弓矢的发明者，黄帝封挥为弓正，职掌弓矢制造。后又取弓长之意，赐姓张于濮阳，封地清河。因此，张挥成了张姓人的始祖。这一支张姓以清河为发源地，民间也有“天下张姓出清河”的说法。
+曲江衍派：唐玄宗名相张九龄之弟张九皋的后裔张崇纪，世乱退隐入闽，其后人尊张九皋为惠安“曲江派”始祖。
+鉴湖衍派：张延鲁（号鉴湖居士）之六世孙在宋代建立鉴湖张氏家庙。`
+            },
+            "卓": {
+                character: "卓",
+                derivations: ["西河衍派", "南阳衍派"],
+                traditions: ["褒德传芳"],
+                lintels: [],
+                culture: `卓氏之先，本出于燕，自燕昭王子质成，采食于涿(今河北涿县)，其后裔避其姓，改涿为卓。另有一说：卓氏出自芈姓，春秋时楚国王族之裔，公子卓是楚威王之子，裔孙卓滑，官拜楚国大夫。\n褒德传芳：汉代，四川临邛的卓王孙，以冶铁而致巨富，其女乃嫁与著名文学家司马相如的卓文君。东汉，名臣卓茂(字子康)任密县县令时，河南有一年二十余县发生严重蝗灾，唯独密县免遭蝗害，汉光武帝为提倡教化，拜卓茂为太傅，封褒德侯。卓氏后人引以为荣，书堂号为“褒德传芳”，并以楹联“临邛巨富(卓王孙)，褒德晋封(卓茂)”标榜先祖业绩。\n西河衍派、南阳衍派：卓滑的后裔在汉代聚居西河(今山西离石县)，故以“西河”为郡号。东汉时，以太傅卓茂为代表的南阳郡宛县卓氏家族，名望甚高，故又标“南阳”郡号。因此，卓姓以后郡望为西河、南阳。`
+            },
+            "庄": {
+                character: "庄",
+                derivations: ["天水衍派", "桃源衍派"],
+                traditions: ["锦绣传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zhuang.jpg" , alt:"锦绣衍派门楣示例" },
+                culture: `在漫长的历史中，"锦绣传芳"就像一颗很亮的星星，展现着庄氏家族的光荣和出色。今天，客从何处来实践团为大家科普的门楣文化是"锦绣传芳"\n庄氏系出芈姓，楚王之裔，后有庄周、庄蹻。楚庄王后代子孙皆以“庄”为姓。庄氏家族到福建的始祖是庄森，他老家在河南汝宁府光州固始。唐咸通六年（865年），庄森考中进士，官做到广州都督、刺史。唐广明年间（880-881）致政而归，后由河南光州固始迁闽永春县桃源里蓬莱山白里村，为庄氏闽南始祖（桃源衍派）。\n过了些年，庄森的第九代孙子庄夏出现了。庄夏当官清廉，历仕孝宗、光宗、宁宗三朝，获封永春县开国男。宋宁宗为表彰其功绩，将庄夏祖父墓葬所在的“鬼岫山”改为“锦绣山”，并赐建府于泉州城内。庄氏后裔改堂号“天水”为“锦绣”，以此为荣，家族的名号也改成了"锦绣传芳"。`
+            },
+            "朱": {
+                character: "朱",
+                derivations: ["沛国衍派"],
+                traditions: ["沛国传芳", "孝感传家"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zhu.png", alt: "沛国传芳门楣示例" },
+                culture: `朱氏主要源自姬姓、祁姓、子姓及少数民族改姓等。朱襄氏被尊为朱姓始祖。朱襄氏是伏羲氏的大臣，被封于朱，后来朱襄氏成为“炎帝”。\n沛国传芳：朱姓乃古帝颛顼高阳氏后裔，周武王克商封曹挟于邾，春秋时为楚所併，子孙去邑为朱，世居沛国相县。朱氏源自尧帝之子丹朱，其后裔在隋唐时期发展成沛国郡的望族。\n孝感传家：朱鉴(1390-1477年)，明泉州鲤城江南人。其最早出名，是不同凡响的孝行：为了给父亲治病，幼年的朱鉴割下大腿上的肉当作药引，成为名闻四方的大孝子。后朱鉴用心读书，举进士步入仕途后，心系国家社稷，因孝顺美德被皇帝赐建“孝感动天”牌坊。`
+            },
+            "周": {
+                character: "周",
+                derivations: ["岐山衍派", "汝南衍派", "芝山衍派"],
+                traditions: ["汝南传芳"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zhou.png", alt: "汝南衍派门楣示例" },
+                culture: `周姓最早可追溯到远古的黄帝时期。据《姓氏考略》所载，黄帝时就有一位叫周昌的大将，至商代又有一名叫周任的太史，这两个人的后代都以周为姓氏。\n岐山衍派：西周初年周姓祖先们把后稷奉为周族的始祖，后稷的裔孙古公亶父（即周太王）率领族人自邰迁徙至陕西岐山下周原，从此称为周族，到文王姬昌时，以国为氏。\n汝南衍派：周平王有个儿子被封到了汝坟，传到第十八代姬邕，周被秦灭，姬邕改姓为周。这支周姓在当地发展繁衍，汉唐时成为著名的汝南周氏。此系周氏后人以“汝南”为堂号。\n芝山衍派：此系周氏后人从晋江祥芝迁徙而来，一支移居仁风李公祠宫边，另一人移居金鱼巷。`
+            },
+            "钟": {
+                character: "钟",
+                derivations: ["颍川衍派"],
+                traditions: ["颍川世泽"],
+                lintels: [],
+                culture: `钟姓源于姬姓（以邑为氏）、源于嬴姓（以国名为氏）、出自少数民族汉化改姓。钟氏，系出汤王之后，微子之裔，公元前285年被周武王封于宋地，西周末年诸侯混战，钟氏后裔迁至豫州颍川避居。\n颍川世泽：盘、蓝、雷、钟均称一灯号“颍川”，钟氏祠堂横匾均写“颍川世泽”。`
+            },
+            "郑": {
+                character: "郑",
+                derivations: ["荣阳衍派", "荥水衍派", "莆阳衍派", "南湖衍派"],
+                traditions: [],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zheng.jpg" , alt:"荣阳衍派门楣示例" },
+                culture: `郑姓出自姬姓。周宣王二十二年(前806)封弟姬友于郑（今陕西华县一带）。桓公之子武公掘突在荥阳一带受封建立新郑国（今河南新郑县），族人纷纷以国“郑”为姓，成为黄帝子孙中之望族。\n荥阳衍派：战国时郑国氏族人居黄河中下游各地，以“荥阳”为郡望。\n莆阳衍派、南湖衍派：西晋末年“永嘉之乱”，河南郑氏大批南迁，其中公元307年清远望族郑昭率师入闽。郑昭游历莆田(古称兴化，又称莆阳)时，爱南湖山水之胜，于是迁葬其祖于此，所以部分郑氏后人以“莆阳衍派”作为门楣。`
+            },
+            "赵": {
+                character: "赵",
+                derivations: ["南阳衍派", "天水衍派", "星塔衍派", "颍川衍派"],
+                traditions: ["夹马传芳", "汴京传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zhao.jpg" , alt:"星塔衍派门楣示例" },
+                culture: `在许多吴氏族人的门楣上，常常悬挂着"星塔衍派"的门楣。而星塔其实是泉州市晋江市的一个古村落名------星塔村，以地名为衍派和门楣，不由让我们想对星塔村有进一步的了解。\n在星塔村中内坐落这一座宗祠，大门的门楣上写着"吴氏宗祠"，但当我们走进祠堂，却发现大殿横梁上赫然挂着"赵氏家庙"的牌匾，而其中供奉的也无一不是赵氏祖先。这独特的丧葬习俗让我们感到困惑，在询问后我们才得知，"生吴死赵"的丧葬习俗与吴氏家族那段神秘的历史过往有关。\n赵姓出自于嬴姓。伯益的裔孙造父善于训马驾车，受周穆王器重，赐封于赵（今山西越城县西南），其子孙以封邑“赵”为姓。涿郡赵氏一脉赵匡胤得天下建立宋朝。\n星塔衍派：宋末元初，泉州一带的赵氏皇族遭了元军的屠杀。赵匡胤的裔孙赵仕道为了躲避杀身之祸，逃往安海星塔村，并改姓为吴（生吴死赵）。为感念外祖的救命之恩，临死前嘱咐子孙后代生前姓吴，死后恢复本姓，在墓碑和墓主上改为赵姓。`
+            },
+            "章": {
+                character: "章",
+                derivations: ["东平衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `章姓主要出自姜姓、任姓、改姓。西周初年，炎帝裔孙姜尚辅佐武王灭商有功，被封于今山东半岛一带，建立齐国。齐国把王公贵族重新分封，其中一支被封于鄣(今山东章邱), 成为齐国的附属国之一。春秋时，鄣国被齐国吞并，国人为纪念故国，遂以国名鄣为姓，后去邑从章，这是章姓的主要来源。\n东平衍派：章姓的孕育地在山东省泰安市东平县鄣城村，商朝时此地为鄣国。`
+            },
+            "詹": {
+                character: "詹",
+                derivations: ["河间衍派", "渤海衍派", "佛耳衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `詹姓主要源于黄帝、赐姓、官名、地名。相传在黄帝去世后，继位的人从他的子孙中选出一些人守护灵柩，使他们得以瞻仰黄帝的遗容而得到尊崇。也有说法是周宣王为支庶子赐姓为詹，史称詹侯。詹侯的后代以詹为姓，居河间。\n河间衍派、渤海衍派：历史上詹氏形成了河间(今河北献县)、渤海等郡望。\n佛耳衍派：后周世宗显德三年(956年)，在任一年多的县令詹敦仁不愿为官，卸任后，他钟爱安溪西部佛耳山峭绝高大、清静偏远，后择地兴建“清隐堂”。`
+            },
+            "粘": {
+                character: "粘",
+                derivations: ["浔海衍派", "浔江衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `粘氏满族，前身称女真族，居长白山赤水。粘氏先祖撒改辅完颜旻（金太祖阿骨打）建立金国，官为相国。撒改长子宗翰，尊为粘氏始祖，女真名为“粘没喝”（完颜粘罕）。后因宗室浩大，子孙即以祖名“粘”字为姓。\n浔海衍派、浔江衍派：福建粘姓的祖先名叫博温察儿，元代时曾知河中府，于元朝末年浮海南游，到达了福建晋江的浔江浔海居住。这里在元代产海盐，设有浔渼场。因此，粘姓家谱族谱多题有浔江、浔海、浔渼字样。`
+            },
+            "曾": {
+                character: "曾",
+                derivations: ["龙山衍派"],
+                traditions: ["三省传芳", "鲁国传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/zeng.jpg" , alt:"龙山衍派门楣示例" },
+                culture: `曾姓为传统汉族姓氏，最初发源于今山东省临沂市兰陵县（苍山县）西北一带。夏王少康封地给小儿子曲烈作为子爵王国，称为鄫子国。后鄫国被灭，鄫国太子巫出奔邻近的鲁国，用原国名“鄫”为姓氏，但除去了邑旁（阝），表示离开故城，不忘先祖，称为“曾”。\n鲁国传芳、三省传芳：曾姓远祖为夏禹。后曾皙、曾参父子同拜孔子为师，曾参位列孔庙。孔庙五人中孔、孟、曾、颜四姓，都以“鲁国传芳”为堂号，因曾参“吾日三省吾身”的典故，曾氏又用“三省传芳”为堂号。\n龙山衍派：唐末光启年间，河南人曾延世率家族随开闽三王入闽，定居泉州龙头山一带，成为曾氏龙山衍派一世祖。宋端拱二年，龙山曾氏出了第一位进士、且高中榜眼的曾会，其子曾公亮亦登进士第，并拜相，开启了曾家“曾半朝”的显赫生涯。`
+            },
+            "俞": {
+                character: "俞",
+                derivations: ["清源衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `传统的说法俞姓源于姬姓，出自黄帝属臣跗之后，属于以物事称谓为氏。据史籍记载，黄帝时有名医跗，其医术高超，精于腧经之治，为中国传统中医经脉理论的奠基人。在古代，“腧”与“俞”二字相通，后简笔写作俞跗。相传在俞跗的后裔子孙中，多称为俞跗氏，后省文简化为单姓俞氏。\n清源衍派：俞大猷，福建晋江人，曾读书于清源山清源洞、清源山紫泽书院，并习武于清源洞，人称十才子。清源山至今遗有其练胆石。俞大猷后人从濠涧衍派中分出来，使用堂号“清源”，剩下的俞姓后人继续沿用濠涧衍派，目前聚居南安九都。`
+            },
+            "余": {
+                character: "余",
+                derivations: ["下邳衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `余姓的来源主要由祖先名字中的字演变而来。轩辕黄帝传至周武王，有子叔虞。其裔孙晋献公生子由余，避乱到西戎。后来由余以使臣身份出使秦国，为秦穆公贤德所折服，投奔秦穆公，得到重用。在由余的辅佐下，秦一举消灭12国，成为西方的盟主。去世后，其子孙部分以余为姓，以纪念先祖并示出自名贤之后。由余的后裔成为余姓的主要来源。\n下邳衍派：余姓中的一支出自大禹的后代。夏朝时，夏王少康的庶子无余被封为越王，子孙有人以其名字中的余为姓。另一说法是余姓出自大禹第三子空（又名罕），被封于余（今江苏省下邳县），后人以“下邳”为堂号。泉州余氏郡望多为“下邳”。`
+            },
+            "尤": {
+                character: "尤",
+                derivations: ["卿田衍派", "吴兴衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `中华尤姓得姓较晚，始于五代十国时期的后唐，系出沈氏。五代王审知称闽王，国人姓沈者，避沈音去水为尤。唐僖宗光启二年(886)沈思礼从王审知入闽，因“沈”与“审”谐音，为避讳去水为尤，故尤氏以沈思礼为入闽一世祖。思礼肇居于泉州，与留从效分掌四门学。\n卿田衍派：唐皇褒扬思礼公辅助王审知治理八闽，归顺大唐有功加封思礼公为驸马都尉，后思礼公告老在泉州盖驸马府，享受世卿待遇，得到泉州南安南厅永久封地号“卿田”，驸马岭唐驸马尤宗墓保存至今。\n吴兴衍派：宋天禧二年(1018)尤氏第五代始祖尤叔保由闽入吴，尤姓进入吴文化地区以后“五世三登宰辅，奕朝累掌丝纶”。宋度宗天子御笔，尤氏一举在江浙“吴兴郡”祖根地名扬天下。`
+            },
+            "叶": {
+                character: "叶",
+                derivations: ["南阳衍派", "濑水流芳", "凌云衍派"],
+                traditions: ["沈根传芳", "古濑传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ye-shi-xiao.jpg" , alt:"叶氏宗祠门楣示例" },
+                culture: `叶姓源出芈姓，封邑为氏。史载，楚公族为芈姓之后，楚昭王芈轸，因沈尹戌英勇战死，封沈尹戌的儿子沈诸梁于叶邑（今河南叶县旧城），史称叶公。叶公曾助楚惠王复位，为楚国立下大功，被分封到南阳（今河南南阳、湖北襄樊一带），赐爵为公，世人尊为叶公。叶公之后，以封邑为氏。南阳郡的叶姓则为“南阳世家”“南阳衍派”。\n濑水流芳：唐元和年间(806-820)中原兵乱，叶清挈全家自浙江处州丽水感德里德仑乡避乱入闽，居仙游归德乡清泉里北岩院下。至五世孙叶与，迁居仙游古濑林田，叶与为古濑林田一世祖。古濑叶氏后人则常以“濑水”为堂号。\n凌云衍派：凌云叶氏，以其位于凌云山（南安朝天山）下得名，始祖为宋乡进士学叶迅。南安凌云叶氏是闽南望族，曾有“一王、两郡、驸马、两上将”之称。`
+            },
+            "姚": {
+                character: "姚",
+                derivations: ["历山衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `姚姓源于舜帝姚重华，世代相传至今，史称姚氏正宗。南宋的《通志·氏族略》记载：“姚姓，虞之姓也，虞帝生于姚墟，故因生以为姓”，舜因生在姚墟，其后子孙即以地为氏，称为姚氏。\n另一支姚姓则起源于“癸”（舜之妻名），女+癸=姚。因为舜娶了一对姐妹（二姚），即两个癸（娥皇、皇英），其中一支癸女的后代，将“癸”左边加“女”字，形成姚姓。\n历山衍派：姚姓始祖虞舜，曾辛勤耕稼于历山，其后人为纪念圣祖舜帝征庸前长耕历山，以“历山”为堂号。`
+            },
+            "杨": {
+                character: "杨",
+                derivations: ["弘农衍派", "印塘衍派", "芙蓉衍派", "道南衍派", "关西衍派", "佛昙衍派", "奎章衍派"],
+                traditions: ["弘农流芳", "四知传芳", "清白传芳", "关西传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/yang.jpg" , alt:"四知衍派门楣示例" },
+                culture: `杨姓出自姬姓。其来源有两种说法：一是以国为氏，二是以邑为氏。晋六卿之乱发生后，杨氏子孙溃散，其中一支辗转居住弘农华阴一带。汉代弘农杨氏形成了高门望族。杨氏子孙以“弘农”为郡望。\n四知传芳：东汉时杨震任荆州刺史，曾向朝廷举荐名士王密，王密怀揣黄金到杨震府中行贿，杨震拒绝，并说：“天知，地知，子知，我知，何为无知者？”皇帝得知此事，特封杨震“四知”，杨氏子孙就把“四知”为堂号。\n关西传芳：东汉时有关西人杨震博览明经，时人称他“关西孔子”，故而得名。\n佛昙衍派：佛昙杨氏肇基祖杨亮节系南宋度宗杨淑妃之弟。宋祚亡，杨亮节抱亡国之痛，遂埋名渡浯洲（金门），季子世隆到佛昙开基。`
+            },
+            "颜": {
+                character: "颜",
+                derivations: ["鲁国传芳", "琅琊衍派"],
+                traditions: ["鲁国传芳"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/yan.png", alt: "鲁国传芳门楣示例" },
+                culture: `颜姓源出基本有三：出自曹姓（奉曹夷父及其后人颜回为始祖）、出自姬姓（奉周公旦、伯禽父子为始祖）、他族改姓。\n鲁国衍派、鲁国传芳：西汉时，颜姓人有济南亭长后迁九卿的颜异。又因颜回位列孔庙，孔庙五人中孔、孟、曾、颜四姓，后人以“鲁国衍派”“鲁国传芳”为堂号。\n琅琊衍派：唐代书法大家颜真卿即属于琅琊一脉。真卿四世孙弘，官金陵同州参军，次子普，五代末为泉州德化令，于是以当地为家。`
+            },
+            "薛": {
+                character: "薛",
+                derivations: ["河东衍派"],
+                traditions: ["莽原传芳"],
+                lintels: [],
+                culture: `薛姓始祖奚仲，因分封在薛国而得姓，以封邑名为氏。另有一说薛姓出自舜帝的姚姓，为孟尝君（田文）后裔。薛姓的郡望主要有河东郡、新蔡郡、沛郡、高平郡等。\n河东衍派：薛氏之祖薛推始由河东徙居江左（今江西），等到南朝陈光禄大夫薛贺始徙居于闽长溪（今福建福安市），被尊为入闽始祖。后裔迁居晋安（今福州市）还珠境，再徙居福唐。至二十七世孙薛天舆贸易于泉州之车桥，元美遂为泉州薛氏一世祖。\n莽原传芳：此户薛姓人家的主人由于年轻时在大西北荒原工作，回乡后感念草莽荒原奋斗的经历，故将门匾写作“莽原传芳”。`
+            },
+            "许": {
+                character: "许",
+                derivations: ["瑶林衍派", "高阳衍派", "三山衍派", "皇恩衍派"],
+                traditions: ["瑶林传芳", "太岳传芳", "侍御传芳", "赐恩传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/xu.jpg" , alt:"瑶林衍派门楣示例" },
+                culture: `在中华民族源远流长的姓氏长河中，许氏家族以其独特的魅力和深厚的底蕴，闪耀着璀璨的光芒。其中，"瑶林衍派"作为许氏的重要分支，承载着无数的家族故事和荣耀。今天，让我们跟着客从何处来实践团一起探寻瑶林衍派的起源及背后的历史故事，品一段姓氏传奇，看一脉家族荣光。\n许姓多出自姬姓，为颛顼后裔，封于昆吾，即古帝丘颛顼之虚，为昆吾氏，尧舜时期昆吾氏首领许由为当世大贤，死后葬于箕山，后人多以许由为许氏始祖。许氏出自姜姓，为炎帝神农氏的后裔。许氏始祖文叔，是周武王时的开国功臣，因功被封于许国（今河南许昌），其后代便以国为姓，称许氏。\n高阳衍派：春秋战国时期，许国被楚灭后，多数许姓就地繁衍或北上迁徙。许姓北上最初迁徙之地是冀州高阳（今河北高阳），其后人以“高阳”为堂号。\n瑶林衍派：相传唐末许爱官居唐侍御特晋银青光禄大夫兼金吾卫将军，为避乱，挈眷由诏安徙入泉州，先居瑶林乡，后徙居丁亭乡（今石龟许厝），遂为石龟瑶林许氏开基始祖。为纪念开基之地，许氏子孙均以瑶林衍派为堂号。\n三山衍派：三山衍派为瑶林许氏一脉福州的分支，福州别称“三山”。\n赐恩传芳、皇恩衍派：唐贞元十八年(802年)，许稷举进士第，历官比部尚书郎。随驾西征有功宪宗得知许稷酷爱山水，便将泉州清源山的左峰赐给他，崇奉君赐匾曰“赐恩”，该山即改称“赐恩岩”。“赐恩传芳”遂为福建许氏堂号，亦有许氏后人以“皇恩衍派”作为门匾。`
+            },
+            "徐": {
+                character: "徐",
+                derivations: ["东海衍派", "南州衍派", "南洲衍派"],
+                traditions: ["东海传芳"],
+                lintels: [],
+                culture: `徐姓的来源主要有三：出自子姓（殷民六族）、出自嬴姓（若木封于徐国）、外族改姓。徐姓始祖为若木，若木之父伯益因辅佐禹治水有功，帝舜赐以嬴姓。\n东海衍派：徐氏发源于东海之滨的东夷族徐国，汉代后的郡望就是东海郡。夏代徐国的第五代国君徐豹，“食邑东海”。部分后代以“东海”为堂号。\n南州衍派、南洲衍派：东汉末年，徐樨之祖徐瑞从下邳迁洪州（江西南昌），为南州（也写作南洲）衍派之始祖。唐天宝八年安史之乱，徐务（字恒经）由衢州避乱入闽，卜居莆田县崇仁里。`
+            },
+            "熊": {
+                character: "熊",
+                derivations: ["新郑衍派"],
+                traditions: ["江陵衍庆"],
+                lintels: [],
+                culture: `相传黄帝曾建都于有熊（今河南省新郑一带），史称他为有熊氏。他的后代中，便有人以地名熊为姓。黄帝的后代中，另有一人名穴熊，其裔孙又有人名鬻熊，曾做过周文王的老师。鬻熊的裔孙生活在周成王时代，被分封在荆楚地区，建楚国，楚国君就用先祖的名。\n新郑衍派：据史籍《元和姓纂》记载，相传黄帝生在寿丘，长于姬水，建都于有熊（今河南新郑），又称有熊氏。黄帝的后代中便有人以地名为姓，称熊氏。`
+            },
+            "辛": {
+                character: "辛",
+                derivations: ["陇西衍派", "雁门衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `辛氏有五大源流：源于姬姓（高辛氏后裔去高字改为辛姓）、出自莘姓（后由于莘与辛音近，遂去“艹”为辛氏）、出自上古有辛氏部落的后裔、出自赐姓（北周有赐项氏姓辛）、出自他族改辛姓汉化改辛姓。\n陇西衍派、雁门衍派：两汉之际，辛氏族人在陇西（今甘肃临洮）已形成大的聚落，特别是辛庆忌家族世代显贵，形成了辛氏陇西郡望。另外，在雁门一带的辛氏族人形成了辛氏历史上的第二大郡望——雁门郡。`
+            },
+            "谢": {
+                character: "谢",
+                derivations: ["金鱼衍派", "银同衍派"],
+                traditions: ["宝树传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/xie.jpg" , alt:"宝树传芳门楣示例" },
+                culture: `谢氏出自黄帝之任姓，原任姓中国人因不服管治，部分出走迁入谢城，以故地谢邑为姓；申伯（南仲）是炎帝之后，为姜姓，因功敕封佐王，初封申国，继封谢邑，故子孙别姜姓另立谢姓。\n宝树传芳：源自“芝兰玉树”典故，《世说新语》载，东晋谢安曾称其侄谢玄是“吾家之宝树”。后经初唐四杰之一的王勃撰《滕王阁序》点出：“非谢家之宝树，接孟氏之芳邻。”自此，谢氏后皆以“宝树传芳”为家训。\n金鱼衍派：谢仲规为宋皇佑元年间进士，累官福建转运使，官至三品，受赠金鱼袋，建“金鱼世第”于泉州城内，由此衍出为金鱼衍派。\n银同衍派：谢修唐文德五年登进士居同安，后代迁入泉州市区，堂号为“银同（同安县别称银同）”。`
+            },
+            "萧": {
+                character: "萧",
+                derivations: ["凤翼衍派", "兰陵衍派", "兰陵世家", "河南衍派"],
+                traditions: ["八叶传芳", "谏宪传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ye-shi-xiao.jpg" , alt:"萧氏衍派门楣示例" },
+                culture: `萧姓主要来源有三：出自姬姓（帝喾后代，大心因平定“南宫长万”之乱有功，封于萧）、殷的遗民（遗民六族之一）、古代赢姓各部族首领柏裔之后作士于萧。\n兰陵衍派：春秋萧国灭亡之后，萧氏择近四以为家。后沛县人萧何辅佐刘邦建立西汉，居功第一，拜为开国丞相。萧何父为东海兰陵人，因而萧氏以“兰陵”为堂号。\n八叶传芳：指梁高祖萧衍的长子，即昭明太子萧统一派中八位后嗣，自唐初至唐末相继出任宰相，史称唐朝萧氏“八叶宰相”。\n河南衍派：南北朝隋唐时期，萧岿的儿子萧瑀从隋至唐，此后八叶宰相相继掌权，成为世家大族，聚居地就是河南郡。\n谏宪传芳：“宪”的基本字义为“法令”。萧姓人家以祖先当过御史为荣，萧氏后人便以“谏宪”为堂号。`
+            },
+            "夏": {
+                character: "夏",
+                derivations: ["会稽衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `夏姓，中华姓氏之一，主要由姒姓夏氏和妫姓夏氏组成。其中以大禹后裔姒姓夏氏为主。相传帝尧之时，尧命颛顼帝的后裔鲧治理洪水，鲧死后尸体三年不腐烂，祝融用吴刀剖开了他的尸体就产生了夏禹。夏禹治平天下，登天子位，建立了中国第一个世袭王朝夏朝，族名、国号夏后氏，源出姒姓。\n会稽衍派：姒姓家族由于正处于姓氏演变的历史分水岭，家族地位非常显赫。姒姓诸氏主要分布在浙江绍兴会稽山大禹陵附近。在姒姓诸氏中比较常见的有夏氏，禹氏，欧氏，欧阳，党氏，夏侯氏等。`
+            },
+            "伍": {
+                character: "伍",
+                derivations: [],
+                traditions: ["安定传芳"],
+                lintels: [],
+                culture: `伍姓源出自炎帝神农之次子讳永，封于河陇，世为雍侯。传至雍侯绍，改封椒侯，后降椒侯为庶人。春秋战国时，楚庄王有个宠臣叫椒参，因力劝楚庄王进军攻晋，使楚军大胜，椒参被封于伍地，椒参便易椒为伍，称为伍氏，尊伍参为始祖。伍氏望出安定郡，故伍氏以“安定”为堂号。\n宋代，河南光州固始的伍仕登宋大观三年(1109)进士，官左拾遗。宣和七年(1125)谪闽兴化县主簿，遂占籍不返，定居莆阳（莆田），为开闽始祖。`
+            },
+            "吴": {
+                character: "吴",
+                derivations: ["延陵衍派", "星塔衍派", "玉湖衍派"],
+                traditions: ["让德传芳", "三让传芳", "至德传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/wu.jpg" , alt:"延陵衍派门楣示例" },
+                culture: `吴氏，源出姬姓，始自周初。吴氏开基祖吴泰伯系周部落首太王领古公亶父长子，泰伯知父亲之意，心存退让，与二弟仲雍远遁江南，建立吴国。泰伯“三以让天下”，孔子称泰伯“真至德第一人也”。后人皆以国为姓。吴人门匾常书“至德传（流）芳”“三让传芳”。\n延陵衍派：部落句吴传至吴王寿梦时，由于其四季札最贤，寿梦欲传位于他，而季札坚辞不受，避居延陵（今江苏武进），后延陵被作为封地赐予季札，季札也因此被称为“延陵季子”，季札的后代就是延陵分支。闽南地区大都为“延陵衍派”。\n星塔衍派：宋末元初，泉州一带的赵氏皇族遭了元军的屠杀。赵匡胤的裔孙赵仕道，逃往安海星塔村，并改姓为吴。他临死前嘱咐子孙后代生前姓吴，死后复本姓赵，以此来纪念外祖的救命之恩。`
+            },
+            "翁": {
+                character: "翁",
+                derivations: ["盐官衍派", "钱塘衍派"],
+                traditions: ["六桂传芳"],
+                lintels: [],
+                culture: `翁姓主要源于黄帝、周昭王、少数民族改姓。相传昭王妃汪山夫人生庶子姬溢，食采翁山，因以为氏。翁溢二十七世孙翁弘，于战国时官楚国左丞，居梁之原城，翁氏子孙始繁衍昌盛，因而奉翁弘为一世祖。\n盐官衍派、钱塘衍派：翁姓发祥于河南原城，著望于盐官、钱塘。\n六桂传芳：唐建中间(780-783年)，翁弘的三十四世孙翁轩入闽。其五世孙翁乾度，官至郎中，生六子：处厚、处恭、处易、处朴、处廉、处休，先后登进士第，时有“六桂联芳”之誉，为避奸佞不测，令六子改为洪、江、翁、方、龚、汪六姓（三子处易仍姓翁），分族繁衍，统一使用“六桂堂”堂号。`
+            },
+            "温": {
+                character: "温",
+                derivations: ["太原世第", "汲郡衍派", "木原衍派"],
+                traditions: ["沛国传芳"],
+                lintels: [],
+                culture: `温姓起源有不同说法，最具代表性的是“三源说”和“多源说”。“三源说”主张温姓有三个源头：一是出自己姓，为颛顼高阳氏之裔；二是源于苏国己姓；三是源于姬姓，为唐叔虞之后。\n“多源说”主张温姓有更多源头：如郤至食采于温，号曰温季；鲜卑族叱温氏、温盆氏和温孤氏均改温氏。\n太原世第：战国时期秦国庄襄王四年置太原郡。今漳州龙溪、泉州安溪的温姓人家，多属太原衍派。`
+            },
+            "魏": {
+                character: "魏",
+                derivations: ["钜鹿衍派", "莆阳衍派", "鹤山衍派"],
+                traditions: ["钜鹿传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/wei.png" , alt:"钜鹿传芳门楣示例" },
+                culture: `魏姓起源于姬姓，周文王占领隗姓魏国之地，封其亲属于魏国。周武王灭商后，封其弟毕公高于毕，后迁封魏国.春秋时，毕公高的后裔毕万辅佐晋献公，晋献公封毕万于魏地，建立另一个姬姓魏国。传至魏斯，建立强大的魏国，成为战国七雄之一。后人以邑为氏，尊毕万为得姓始祖。\n钜鹿传芳、钜鹿衍派：秦汉时期，毕万的裔孙魏歆任钜鹿太守，子孙留居钜鹿在当地发展为望族。世代显贵，因此以“钜鹿”为堂号。\n莆阳衍派：魏鸿，宋宣和年间登八行科，官棠邑令。魏鸿随宋高宗南下，被谪福建泉州路德化尉。因战乱遂卜居莆田，是为入莆田始祖。\n鹤山衍派：南宋学者魏了翁，号鹤山，官至工部侍郎。丁父忧时，曾于白鹤山下筑室授徒，后又建鹤山书院。其后裔以“鹤山”为堂号。`
+            },
+            "汪": {
+                character: "汪",
+                derivations: ["锦霞衍派"],
+                traditions: ["六桂传芳"],
+                lintels: [],
+                culture: `汪姓出自汪芒氏、姬姓、嬴姓。商时有汪芒(罔)国，后楚灭越，汪芒氏逃到安徽歙县一带，改称汪氏。姬姓源于周公之子伯禽之后，鲁成的庶子满因食邑于汪，其后以邑为氏。\n锦霞衍派：宋淳祐七年(1247)进士汪立信，抗元失败，自杀于南京。立信的夫人康氏及子应麟、应鸿护驾皇太后及幼主，出走入闽，皇太后赠送锦霞玉佩后，康夫人及两子便居住在象浦（惠安），后汪氏子孙发达，分居闽南各支派，均以“锦霞”为灯号。\n六桂传芳：源于翁乾度六子分姓的典故,其六子处休分姓汪。`
+            },
+            "万": {
+                character: "万",
+                derivations: ["扶凤衍派", "河南衍派", "宫保衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `万姓主要来源有五：出自姬姓（芮伯万、毕万的后代）、出自他族改姓（叶万氏）、周武王因“以万人而服天下”、古代弈叶的人。\n出自姬姓，是以祖父的字作为姓氏。周朝大夫芮伯万，其后代以祖父的字“万”为氏。晋国大夫毕万，其子孙以祖父的字“万”为氏，也是山西万氏。\n扶凤衍派：两汉时期，陕西扶风一带万氏族人枝繁叶茂，遂有郡望——扶风郡。\n宫保衍派：万正色于康熙十八年得到圣祖的赞赏，特旨加太子少保衔，调任福建水师总兵，提水师提督。亦有万氏后人以“宫保衍派”作为门匾。`
+            },
+            "涂": {
+                character: "涂",
+                derivations: ["豫章衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `涂姓源于远古时期的涂山氏。原始社会末期，涂山氏部落主要活动于今安徽蚌埠西部一带。夏禹时，涂山氏是夏朝在东南地区的重要方国之一，传说夏禹曾亲临这里与诸侯会盟，并娶涂山氏之女为妻，生子启。\n另有说法以水名为氏。古有涂水，即今称滁河，居住在涂水流域的部分先人以河流名称作为姓氏。\n豫章衍派：晋元帝于晋建武元年(公元317年)颁诰命，以涂钦征石勒寇乱有功，册封为新吴侯(今江西奉新)，出镇豫章，居武阳港(今江西南昌)。`
+            },
+            "田": {
+                character: "田",
+                derivations: ["鳌城衍派"],
+                traditions: ["紫荆传芳"],
+                lintels: [],
+                culture: `田氏出自妫姓，跟陈、胡两姓出自一脉。周武王追封舜的后裔妫满为陈侯，传到妫完，为避祸逃于齐国，齐桓公任命其为公正，并封他于田地。其后子孙就以采地为氏，称为田姓，尊田完为田姓的得姓始祖。\n紫荆传芳：隋朝有田真、田庆和田广三兄弟，他们分家后，屋前一株紫荆树未分，次日树已枯萎。田真说：“树木同株，闻将分斫，所以憔悴，是人不如木也。” 兄弟相感，遂不再分，紫荆就重又荣茂。子孙为了纪念紫荆树预示的功劳，便取“紫荆传芳”为堂号。\n鳌城衍派：据《鳌城衍派石狮田氏族谱序》记载，田氏始祖雍山公祖籍福州府闽县，于大明万历二十二年奉旨抽军补额，在本省泉州府晋江县永宁卫二十都(今石狮市永宁镇)。永宁当时是明朝的重要海防港口，古称鳌城，所以石狮田姓以“鳌城衍派”为郡望。`
+            },
+            "唐": {
+                character: "唐",
+                derivations: ["晋阳衍派"],
+                traditions: ["儒林传芳"],
+                lintels: [],
+                culture: `唐姓主要来自祈姓（帝尧后裔）和姬姓（周文王后裔）：出自祈姓的唐氏是帝尧的后裔。帝尧的儿子丹朱被封为唐侯，后建立唐国。后唐国被楚国所灭，子孙就以国为氏。\n出自姬姓的唐氏是周文王的后裔。周成王时唐国被灭后，周成王封其弟叔虞于唐国故地，叔虞的后代便以国为姓，称唐氏。\n晋阳衍派：周成王时封叔虞于唐，建都平阳，为唐侯，因其地南有晋水，故为晋国。唐姓世居晋阳，故以“晋阳”为号。\n儒林传芳：唐僖宗乾符元年黄巢起义，唐绮也参赞戎机，随王审知入闽。唐绮的六世孙、乡进士唐知心(字性天，号儒林)分居泉州府桐城之西，后卜居晋江南门外三都樟林，为泉州唐氏肇基祖。`
+            },
+            "汤": {
+                character: "汤",
+                derivations: ["中山衍派"],
+                traditions: ["中山衍派"],
+                lintels: [],
+                culture: `汤姓源于成汤（商朝开国君主）的谥号，其后有一支以其谥号为氏姓汤。另有说法是微子启后裔，因秦始皇焚书坑儒，畏祸及，改子姓为汤姓。\n汤氏大举南迁始于唐代。唐总章二年(669)，校尉汤智随陈政、陈元光父子入闽，落籍福建。\n中山衍派：东周时期，鲜于白狄族在此建中山国，因而汉初在此置中山郡。据湖南益阳《汤氏家谱》记载：河南陈留郡人汤振麟，仕唐为荆湖统制，功封中山郡，谥“文毅公”，其后裔世称“中山汤氏”。`
+            },
+            "孙": {
+                character: "孙",
+                derivations: ["乐安衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `孙氏的历史悠久，源远流长，姓源较多，最早一支系出自姬姓。卫康叔的八世孙卫武公的玄孙以祖父惠孙的字为姓，即孙氏。\n乐安衍派：另一支孙姓出自妫姓，陈厉公妫跃之子陈完逃奔齐国，改陈氏为田氏。齐景公封田书于乐安(今山东惠民县)，并赐姓孙氏。此系孙氏后裔便以“乐安”为堂号。`
+            },
+            "苏": {
+                character: "苏",
+                derivations: ["眉山衍派", "庐山衍派", "阜阳衍派"],
+                traditions: ["武功传芳", "理学传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/su.jpg" , alt:"眉山衍派门楣示例" },
+                culture: `在泉州繁华而喧闹的市井中，坐落这一座十分庄严而耀眼的宗祠------地处泉州胭脂巷（旧称燕支巷）的"苏氏宗闾"。"苏氏宗闾"是省级文物保护单位，是北宋时期著名政治家、科学家苏颂嫡系第十世苏唐舌于元代初年自同安徙居泉州燕支里之后裔的原居民地。那么，今天小编就带大家了解一下泉州苏氏的门楣文化。\n苏氏源出黄帝，肇端高阳，得姓昆吾。自黄帝为元祖，传至八世樊，夏为昆吾官，因功封于苏，自此以苏为姓，以“高阳”为郡望。\n芦山衍派、芦山世胄：唐末时，苏威五世孙苏益随三王入闽，死后赠上将军、武安侯，葬于同安县，后其三子苏光诲建府第于同安永丰乡葫芦山下，是为芦山堂同安苏姓始祖。芦山苏氏人才辈出，传至第六世，出了宋代名相、科学家苏颂。\n阜阳衍派：苏义唐僖宗黄巢为乱时带二弟随王潮入闽，定居南安二十都阜阳谷口前埔九郎园，苏义为阜阳苏氏入闽始祖。\n眉山衍派：唐中宗时期，苏姓入闽始祖苏益为泉州押卫都统使，定居泉州温陵眉山，立眉山名为堂号，此后福建、广东一带后裔便有了堂号“眉山”。`
+            },
+            "史": {
+                character: "史",
+                derivations: ["溧阳衍派"],
+                traditions: ["溧阳传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/shi.jpg" , alt:"溧阳传芳示例" },
+                culture: `史姓来源主要有四：出自黄帝时创造文字的“史皇”仓颉、出自周太史佚之后、隋唐朝代“昭武九姓”之一（西域康国支系）、突厥族阿史那氏所改。周太史佚为周朝的太史公，他为官严正，忠于职守，秉笔直书，子孙世袭此职，便以官职“史”为姓。\n溧阳衍派：西汉宣帝时，封其舅父史恭为杜陵侯。其曾孙史崇，东汉初年平定赤眉刘盆子有功，官青州、冀州刺史，加骠骑将军，汉平帝永平三年封溧阳侯，食邑万户，举家迁居溧阳。因此，史崇的后裔便以“溧阳”为郡望。\n五代时，史崇30世孙史惟则从溧阳埭头徙居浙江四明（今宁波），宋代曾出现过“一门三相二个王，十二公侯十个男，七十多进士一百多官”的辉煌。`
+            },
+            "石": {
+                character: "石",
+                derivations: ["渤海衍派"],
+                traditions: ["武威传芳"],
+                lintels: [],
+                culture: `石氏出自姬姓，春秋时期卫靖伯之孙公孙石碏，属于以先祖名字为氏。石碏，是卫国的贤臣，不惜大义灭亲，处死其子石厚，有功于卫。\n渤海衍派：石氏望出武威、渤海、平原、上党。武威郡在甘肃武威县，渤海郡在河北境内。\n武威传芳：郡望“武威”，源自青海武威石碏卫大夫。又“万石”源自秦汉时期，汉景帝时父子五人皆赐二千石故称万石君。`
+            },
+            "施": {
+                character: "施",
+                derivations: ["钱江衍派", "浔海衍派", "临濮衍派"],
+                traditions: ["临濮传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ye-shi-xiao.jpg" , alt:"施氏衍派门楣示例" },
+                culture: `施氏出自夏朝、姬姓。周武王建立周朝，封其弟姬旦为鲁国公，鲁惠生三子,三子恒任鲁国门丁府,食采于鲍,封施国,号施父,施恒便是施姓得姓之始祖。\n临濮衍派：施父的八世孙施之常精通六艺，是孔子门下七十二贤之一，封“临濮侯”，故施氏后人即以“临濮”为施姓代称。\n钱江衍派：施典，唐秘书丞，与长子敬敷、次子敬承于唐光启年间随王潮入闽。后择址于晋南海滨定居，俗称钱江（前港），后人尊奉唐秘书丞施典为钱江始祖。\n浔江衍派：宋大理寺评事官施炳率三子于宋孝年间由河南固始县移居福清高楼乡，后次子施英迁居晋江南浔（浔江），后人尊奉宋评事官施炳为浔江始祖。`
+            },
+            "沈": {
+                character: "沈",
+                derivations: ["吴兴衍派", "梅山衍派"],
+                traditions: ["固始家风", "清苕世泽"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/shen.png" , alt:"吴兴衍派门楣示例" },
+                culture: `沈姓源自嬴姓、姒姓、姬姓、芈姓。据诏安“沈氏宗谱”以及寿溪沈氏族谱记载，沈姓源于黄帝第十八世孙，周文王的第十子聃季公，因封地于沈子爵，为沈子国，位于汝南沈亭，现河南光州固始县沈丘，以封地赐姓。\n吴兴衍派：东汉光武时（公元56年），沈戎因说降强贼尹良，光武帝刘秀嘉其功。沈戎辞不受侯，乃避地徙居会稽郡乌程县余不乡，后属吴兴郡，先代列祖列宗至启承公，以湖州为中心，列祖列宗代代辈出，蔚为优良家风，海内外凡有沈氏宗庙，祖祠，以吴兴为堂号。`
+            },
+            "邵": {
+                character: "邵",
+                derivations: ["博陵衍派"],
+                traditions: ["安乐传芳"],
+                lintels: [],
+                culture: `邵氏的姓源较为纯正，主要是出自姬姓，为周文王之后。周初大臣召康公因食邑于召，被称为召公或召伯。周室东迁后，召公的采邑也随之东移。燕国被秦国所亡后，召公的子孙以原封地“召”为姓，称召氏。召氏和邵氏其实同出一姓，只是写法不同。改姓时间说法不一，据有关学者考证，是在秦朝建立前后。\n博陵衍派：东汉本初元年置郡，治所在博陵。博陵郡是邵姓在繁衍播迁过程中的一个重要郡望，其地理位置大致在今河北安平、深县、饶阳、安国等地。邵姓主要聚居居于河北安平及河南安阳、汝南一带，其中在河北居住的邵姓以“博陵”为堂号。\n安乐传芳：宋时邵雍，好《易》理，把他的居所命名为“安乐窝”，自号“安乐先生”。`
+            },
+            "尚": {
+                character: "尚",
+                derivations: ["京兆衍派", "汲郡衍派", "清河衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `尚姓是中国姓氏之一。其姓氏来源主要有四：源于姜姓（姜太公）、源于姒姓（尚黑）、源于官职（秦代“六尚”）、源于少数民族及改姓。\n尚姓得姓始祖为尚父，即姜太公，名尚，字子牙。因其祖上伯夷曾辅佐大禹治水有功，被封为吕侯，故又名吕尚，为炎帝后裔。春秋末年，田氏代齐后，原齐国王族有一支以其字名为氏，称尚姓。\n京兆衍派、汲郡衍派、清河衍派：《元和姓纂》和《姓氏考略》讲尚姓望出京兆、清河、上党、汲郡，故尚氏子孙多以京兆、汲郡、清河为堂号。`
+            },
+            "阮": {
+                character: "阮",
+                derivations: ["竹林衍派"],
+                traditions: ["陈留世胄"],
+                lintels: [],
+                culture: `阮姓出自皋陶氏之后商朝诸侯阮国，属于以国名为氏。商朝末年，西岐西伯侯姬昌率军灭了阮国，原阮国王族相约以国名为姓氏，称为阮氏。\n陈留世胄：殷商时代，阮为诸侯国，后为周文王所灭，阮国之民便以国为姓。阮姓一支迁居陈留，即今河南开封，因此，“陈留世胄”成为阮姓郡望。\n竹林衍派：“竹林衍派”则指“竹林七贤”中的阮籍和阮咸，叔侄两人称为“大小阮”。阮籍，字嗣宗，三国魏文学家、思想家。音乐家阮咸旷放不拘礼法，善弹琵琶。泉州阮姓是他们派生的后裔。`
+            },
+            "丘": {
+                character: "丘",
+                derivations: ["河南衍派", "吴兴衍派"],
+                traditions: ["忠实传芳"],
+                lintels: [],
+                culture: `丘姓出自姜姓、姬姓、妫姓、鲜卑族改姓。西周初年，姜太公吕尚作为开国功臣，被封于齐，建立齐国，定都营丘。后因故将营丘改称临淄，太公之子穆怀念都城故称，遂以地为氏，人称丘穆，丘穆后人遂沿用丘姓，奉丘穆为得姓始祖。邱姓本为“丘”姓，清雍正三年(1725年)奉旨避孔夫子（孔丘）讳，加“邑”旁为“邱”。\n河南衍派/吴兴衍派：邱氏望出河南，称“河南衍派”。《风俗通》载：“汉末王莽篡位。丘氏遂迁居吴兴，所以其望又曰‘吴兴’。”\n忠实传芳：宋理宗亲书“忠实”二字御赐枢密使相丘岳（官至正议大夫，封东海郡侯），为纪念亦称“忠实传芳”。`
+            },
+            "彭": {
+                character: "彭",
+                derivations: ["陇西衍派"],
+                traditions: ["梅石传芳"],
+                lintels: [],
+                culture: `彭姓出自黄帝后裔、高阳氏颛顼帝之后和少数民族。颛顼之子称之曾孙陆终有六子，其三子籛铿，又称彭祖，为彭氏始祖。铿善作大鼓，声音洪亮，因称为彭。尧封于大彭（今江苏徐州），建国于彭城。武丁四十二年，商王灭大彭国，子孙遂以国为氏。\n陇西衍派：彭姓的郡望有陇西、宜春等。\n梅石传芳：源于“梅石开，状元来”之谶，传说状元罗伦（罗彭同宗或有渊源）来到泉州，此石裂开为梅花状，香闻数里，应谶之兆。`
+            },
+            "潘": {
+                character: "潘",
+                derivations: ["荥阳衍派"],
+                traditions: [],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/pan.png", alt: "荥阳衍派门楣示例" },
+                culture: `潘姓最早出自姬姓。姬荀号季孙，是周文王姬昌的十五子毕公高四子。毕公高四子名荀，号季孙，“食采潘邑”，是潘姓的始祖。\n唐高宗仪凤二年(677)潘节自河南光州固始随岭南行军总管陈政入闽，开漳建治。潘氏一次在与贼首蓝奉高战斗中，与陈元光共赴于难。\n荥阳衍派：周武王病死后，周成王年幼，周公旦摄政。周公旦亲自率兵平叛，季孙在战场上屡立战功。在“第二次分封”中，潘邑改为潘国，季孙在荥阳受封，其后人以荥阳为郡，子孙世袭。\n汉末潘乾任溧阳长，迁荥阳为中牟令，潘氏一支在此繁衍。迄今潘氏以潘乾为开派一世祖，以“荥阳”为郡望。`
+            },
+            "欧阳": {
+                character: "欧阳",
+                derivations: ["渤海衍派"],
+                traditions: ["锦江传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ouyang.jpg" , alt:"锦江传芳门楣示例" },
+                culture: `欧阳姓最早可追溯到夏朝。欧阳姓出自姒姓，夏君主少康封自己的庶子无余于会稽，到了越王无疆，被楚所灭，无疆子蹄更封于乌程欧余山之阳（古人称山体的南面为山阳），封为欧阳亭侯，遂以为氏，他的子孙因而姓“欧阳”。\n渤海衍派：秦汉初期，在瓯越之欧阳扶助汉灭秦有功，受封为东越王。汉代，其后裔官涿郡太守。分两支，一居冀州渤海（今河北东光、山东东北），子孙犯罪，晋伏诛,孙南奔欧阳建,字坚石,官渤海太守,族多名扬,谚曰：“渤海赫赫,欧阳坚石。”欧阳氏族人始称“渤海衍派”。\n唐中叶，欧阳昌指菱芙氏由赣入闽，任泉州刺史，欧阳昌有四个儿子（欧阳詹三兄弟），其中以第三子欧阳詹最优并突出。`
+            },
+            "倪": {
+                character: "倪",
+                derivations: ["陈江衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `倪姓，是由郳姓改来。在殷商之前，黄帝后裔就建立了邾娄部落。周武王灭商后，邾娄被封为诸侯国，称为邾。周公旦摄政时期，封其次子友郳地，建立郳国。战国时郳国被楚国所灭，为避仇改氏为儿，再后又以郳去“阝”加“亻”旁成倪姓。倪氏自春秋至西汉，世家东海，为当地望族。\n陈江衍派：源于宋末倪崇义从浙江金华入闽任“提举学事司”之职，居福州凤池为倪姓入闽始祖。元代倪崇义长孙倪先生应邀从福州到泉州讲学，留居泉州南关外陈江（今晋江陈埭），繁衍生息。`
+            },
+            "毛": {
+                character: "毛",
+                derivations: ["西河衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `毛姓源于姬姓，属于以国名为氏。毛氏，是黄帝后裔，周武王同母的弟弟毛叔郑之后。毛叔郑始建有毛国，后迁于今陕西岐山、扶风一带，再后举国避难于河南荥阳地区。在毛伯郑的后裔以及国民中，皆有以先祖爵号、封国之名为姓者，史称毛氏正宗。汉族毛氏族人大多尊奉毛叔郑为得姓始祖。\n西河衍派：关于毛氏的始居地，《百家姓》注为西河郡，韶山毛氏家谱每本扉页上都赫然印上“西河堂家藏”。西河，指黄河中游今陕西、河南交界的一块区域。`
+            },
+            "马": {
+                character: "马",
+                derivations: ["扶风衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `马姓出自嬴姓、官名、少数民族改姓。相传夷部落的首领伯益的后代在战国时建立赵国。赵王之子赵奢受命征战，很快就大败秦军，以战功被赵王封为马服君。后来，他的子孙便以他的封地名称为氏，即马服氏，后又省“服”为马氏，赵奢也被尊为马姓始祖。\n扶风衍派：两汉南北朝时，马氏在扶风茂陵（今陕西省兴平东北）发展成为望族，因而称马氏望出“扶风”。`
+            },
+            "骆": {
+                character: "骆",
+                derivations: ["陈留衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `骆姓源出会稽，世代传承于内黄。骆姓得姓始祖为姜太公，因其后有公子骆，为别他族，子孙以其名为氏，称骆姓。\n骆氏的一支最早出自夏王朝时期，单有记载者出自春秋时期的古齐国。\n陈留衍派：骆姓扬名，始于东汉陈留相骆俊，骆俊有文武才干。骆俊素有威恩，天下饥荒之时，邻郡人多来投奔，骆俊又拿出自己的俸禄，并赐予他们衣食，使他们得以活命。遂此系骆姓后人以“陈留衍派”纪念其祖先留陈相骆俊。`
+            },
+            "罗": {
+                character: "罗",
+                derivations: ["豫章衍派"],
+                traditions: ["梅石传芳"],
+                lintels: [],
+                culture: `罗姓出自颛顼之后，直系始祖是祝融氏吴回之孙季连。季连的孙子叫穴熊，是荆楚人的血缘先祖，善于制造罗网，捕捉飞鸟，称罗氏族。后来积极参与周武王灭商战争，奉命征南有功，封安南罗国公。周庄王七年被楚武王所灭，子孙遂以国为氏。\n豫章衍派：据《南安东按族谱》记载，罗仲素，宋代状元，精通经史和理学，居延平府沙县。其后代罗振山是个儒生，并以“豫章衍派”为堂号。\n梅石传芳：“梅石开，状元来”之谶，传说状元罗伦（罗彭同宗或有渊源）来到泉州，此石裂开为梅花状，香闻数里，应谶之兆。`
+            },
+            "吕": {
+                character: "吕",
+                derivations: ["河东衍派"],
+                traditions: ["渭水流芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/lv.jpg" , alt:"渭水衍派门楣示例" },
+                culture: `吕氏门楣文化（渭水流芳）\n在泉州这片充满历史韵味的土地上，吕氏家族的宅院静静地矗立，而门楣则是这宅院最引人注目的部分。它不仅是进出宅院的必经之路，更是吕氏家族身份与荣耀的象征。\n相传上古华夏部落首领炎帝神农氏，因居姜水流域，故以姜为姓。伯夷曾佐尧帝掌管四岳，后又助大禹治水有功，为大禹“心吕之臣”，故封之为吕侯，春秋初年(前680年)，吕国被楚国所灭，其后，子孙以国为氏，史称吕姓正宗，伯夷则被列为吕姓始祖。\n"渭水流芳"与姜太公吕尚有关。传说周文王在磻溪遇到垂钓的吕尚，并聘其为帝师，辅助周朝建立。吕尚的故事成为吕氏家族的荣耀象征。泉州吕氏宗祠大门上的镌联"源宗渭水帝师世，派衍洛阳宰相家"即体现了这一点，横额"渭水流芳"更是对这一传统的颂扬。\n河东衍派：秦末吕青助刘邦安天下，封阳信侯，世居河东郡（今山西永济县），故吕氏的郡望为“河东”。`
+            },
+            "卢": {
+                character: "卢",
+                derivations: ["范阳衍派"],
+                traditions: [],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/lu.jpg" , alt:"范阳衍派门楣示例" },
+                culture: `卢姓主要源自姜姓、姬姓以及少数民族改姓等。春秋时期齐国大夫高傒（姜姓，高氏，名傒），为齐太公姜子牙八世裔孙，因屡建丰功，受封于卢，其子孙遂以卢为姓。高h便是卢姓的得姓始祖。\n范阳衍派：秦有五经博士卢敖，子孙迁居至范阳县，以范阳为郡望。范阳卢氏播誉天下，始于东汉卢植（公元121—192年）。他以著名政治家、军事家、经学家、教育家、文学家称颂青史，开范阳卢氏文化之先河，被尊为卢氏的中兴始祖和范阳卢氏始祖，是历史上配享孔庙的28位大儒之一。`
+            },
+            "柳": {
+                character: "柳",
+                derivations: ["河东衍派", "坝里衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `柳氏出自姬姓，从展姓衍生出来，出自春秋时鲁国大夫姬展禽之后，属于以居邑名为氏。展禽食采于柳下（今河南濮阳柳屯镇），其子孙后代遂以邑名为姓氏，称柳氏。展禽因有“坐怀不乱”之美德，故谥曰“惠”，史称“柳下惠”。亚圣孟子赞之为“圣之和”。\n河东衍派、坝里衍派：春秋时柳姓有入居楚地者，至秦朝又有入居山西境内者，后渐在河东坝里（今山西境内黄河以东地区）形成望族，其后代以“河东”“坝里”为堂号。今晋江磁灶柳氏分迁子孙，所居住地名为何头村，又称坝里。`
+            },
+            "留": {
+                character: "留",
+                derivations: ["彭城衍派"],
+                traditions: ["镇闽传芳", "清源留香"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/liu2.jpg" , alt:"镇闽传芳门楣示例" },
+                culture: `留姓，最早源于伊祁姓，出自古帝尧之子丹朱被封于留邑（今江苏沛县）的庶兄，其后裔子孙遂以先祖封邑名称为姓氏。另有说法出自姬姓，出自周封内大夫食采王畿之留。\n彭城衍派：彭城留姓源自伊祁姓，帝尧的一庶子为留累侯，都徐州彭城之封邑。故其传裔率以“彭城衍派”来纪念自己的本源。\n清源留香：唐末，永春留璋之子留从效为清源军节度使，建第于泉州城内金鱼巷与花巷之间，俗称“留府埕”，遂为留姓入城之祖。留从效任清源军节度使时，积极鼓励海外贸易，促进海上丝绸之路的开拓，使泉州乃至整个闽南地区得以保持繁荣与发展。`
+            },
+            "刘": {
+                character: "刘",
+                derivations: ["彭城衍派"],
+                traditions: ["禄阁传芳"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/liu.png", alt: "彭城衍派门楣示例" },
+                culture: `刘姓出自伊祁姓，为帝尧陶唐氏之裔孙，彭城支派，刘林分支。帝尧陶唐氏长子监明，监明单生永河，早逝，不得立永河为舜诸侯，而封于刘（今河北唐县），以封地为氏，始姓刘。\n刘氏后徙丰沛（今江苏沛县丰邑），传至七十三世刘荣。刘荣生刘煓，刘煓生四子：贾、喜、邦、交，邦即汉高祖。刘邦之孙汉景帝生十四子，第六子汉武帝刘彻、第八子刘胜为中山靖王。彭城郡派，多数谓出自于汉武帝刘彻之后，为宣帝刘询传下；但也有谓出自于中山靖王刘胜之后，为昭烈帝刘备传下。`
+            },
+            "林": {
+                character: "林",
+                derivations: ["西河衍派", "九龙衍派", "金紫衍派", "浯屿衍派", "龙岱衍派", "墩尚衍派", "莲江衍派"],
+                traditions: ["九牧传芳", "锦马传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/lin.jpg" , alt:"西河衍派门楣示例" },
+                culture: `林姓，主要源自子姓（比干后裔）、姬姓及少数民族改姓。其中源于子姓的林氏是商朝末年名臣比干的后裔。商末，比干犯颜直谏被杀。比干正妻夫人陈氏逃入长林山中，生下了儿子坚。周武王灭商后，因其生于林中，其父比干坚贞不屈，被周武王赐以林为姓，封国清河郡（也称博陵郡），授爵博陵侯。林氏便以西河为郡望。\n九牧传芳：唐代，泉州莆田林氏有兄弟九人俱官刺史，一门九州牧，世称“唐九牧”；宋代，泉州霞洲林氏又有兄弟九人俱任知州，世称“宋九牧”，九牧传芳由此而来。`
+            },
+            "廖": {
+                character: "廖",
+                derivations: ["汝南衍派"],
+                traditions: ["武威传芳"],
+                lintels: [],
+                culture: `廖姓出自姬姓、改姓、赐姓。相传帝颛顼后裔叔安封于飂，子孙以国为姓。春秋时，飂伯高去“風”加“广”为廖姓。廖叔安作为始封国君，被尊为廖姓始祖。\n汝南衍派：汝南郡是廖姓最早的发祥地，汝南堂是廖姓人以其祖先发祥地汝南郡取名的堂号，是廖姓最古老的堂号。\n武威传芳：唐贞观年间，廖崇德任虔化县令，政绩显著。崇德的父辈曾任武威太守，其后裔从唐代起几百年间声势显赫，均以“武威”为堂号。`
+            },
+            "梁": {
+                character: "梁",
+                derivations: ["天水衍派", "河南衍派"],
+                traditions: ["梅镜传芳"],
+                lintels: [],
+                culture: `梁姓源自嬴姓（伯益后代）、姬姓（秦仲小儿子康封于夏阳梁山，建立梁国）。\n天水衍派、河南衍派：梁姓望出安定、天水、河南，都是出自陕西梁姓的发源地。这与古代九州中的梁州，今位于四川及陕西的西南部，皆恰合属于梁姓的地理发祥地。\n梅镜传芳：闽南各地，以及台湾高雄，广东新会、潮州、揭阳、陆丰等地，乃至闽南迁移国外的梁姓族人，皆以“梅镜”作为堂号。这是源自梁克家“镜中映梅花”的典故。`
+            },
+            "连": {
+                character: "连",
+                derivations: ["上党衍派"],
+                traditions: ["凤阿传芳"],
+                lintels: [],
+                culture: `连姓出自颛顼高阳氏、祖先名号、官名、少数民族及其改姓。相传连姓出自颛顼曾孙陆终第三子惠连之后。连称，春秋齐大夫，本姓姜，后得姬庄王赐姓连。\n上党衍派：连姓望出“上党”（今山西东南部襄恒、长治一带），后陆续散居各地。故中华连姓族人以“上党”为堂号、灯号。\n凤阿传芳：连治长孙连钺及其子谦嗣承仙游前连凤阿祖祠（称阿头）。三孙连锡到德化甲头（现为格头）定居。阿头、坝头、甲头合称“三头凤”，形成三凤鼎立之势。三地连氏皆以“凤阿”为灯号，自称“凤阿连”。`
+            },
+            "雷": {
+                character: "雷",
+                derivations: ["城山衍派", "冯翊衍派", "豫章衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `雷姓出自黄帝（臣子雷公）、部落名（方雷氏）、少数民族（羌族、畲族）。\n城山衍派：豫章雷焕第二十三世孙雷鸾，于唐末天复年间由四川迁徙入闽卜居建安璜溪。其后裔有一支落籍泉州，明初又从泉州徙到南安城山，雷姓定居城山以后，繁衍日炽，成为当地一大族姓，遂以“城山”为本支派堂号。\n冯翊衍派、豫章衍派：雷姓最多的地方，根据《姓纂》的记载，是冯翊和豫章二地。冯翊，就是今陕西大荔；豫章，则是今江西南昌。`
+            },
+            "赖": {
+                character: "赖",
+                derivations: ["颍川衍派", "河南衍派", "凤山衍派"],
+                traditions: ["版筑传芳", "松阳传芳"],
+                lintels: [],
+                culture: `赖氏始祖叔颖是黄帝20世孙周文王第19子，武王的弟弟，随武王兴师伐纣，屡立奇功。武王平定天下后，叔颖分封于赖地，位列诸侯，后世子孙为纪念叔颖公创业之艰难，遂改“姬”为“赖”姓。有“赖罗傅同宗同源”之说。\n颍川衍派、河南衍派：春秋时，赖国被楚灵王所灭，其遗民迁至鄢地，后在颍川郡、河南郡形成望族。\n凤山衍派：赖廷贵由福建宁化田心迁入泉州。廷贵之孙赖泽翁于宋末元初由泉州徙居晋江八仙山凤山里，生一子名赖真德。赖真德这一支以“凤山衍派”为堂号。\n版筑传芳：赖被楚灭后，为避楚灵王之害，赖氏有些人改为傅姓，因此与傅姓的堂号相同为版筑传芳。`
+            },
+            "柯": {
+                character: "柯",
+                derivations: ["南塘衍派"],
+                traditions: ["瑞鹊传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/.jpg" , alt:"颍川衍派门楣示例" },
+                culture: `柯姓来源主要有三：出自姜太公后代（分封于柯邑）、出自姬姓（周武王会诸侯于柯山）、出自鲜卑族复姓所改。\n南塘衍派：唐末，柯亮（字延熙，号彪炳）自固始随王绪入闽。石晋天福元年(947)后裔柯宝分居莆田。二世孝思徙居桃源（永春）和平里，继而转迁草埔等处聚族而居。\n瑞鹊传芳：“瑞鹊传芳”源自宋代泉州南安丰州人柯述。柯述，字仲常，登进士，官至龙图阁直学士。1075年柯述奉命到漳州赈灾，救活饥民无数，两只喜鹊栖于柯述居住的传舍，柯述离漳时，许多百姓恋恋不舍，送行数十里，那两只喜鹊也飞翔相随不忍离去，人人称异，传为佳话。宋苏东坡特赋长诗以赞。`
+            },
+            "康": {
+                character: "康",
+                derivations: ["京兆衍派", "会稽衍派"],
+                traditions: ["三省传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/kang.jpg" , alt:"会稽衍派门楣示例" },
+                culture: `看衍派知姓氏，康氏作为中华古老的姓氏之一，在繁衍播迁过程中形成了京兆、会稽、东平、华山、晋阳五大郡望，这五大郡望就代表古代康氏的五大宗支。今天客从何处来实践团要跟大家分享的是百家姓中的"康"姓，常见的衍派传芳有：会稽衍派、京兆衍派、东平衍派。\n康姓出自姬姓、古代西域的康国和康居国、突厥康姓、匡姓改姓。周成王长大亲政，诏康叔，举用为大司寇。康叔死后，成王因他一生为周安邦定国，追封康姓，康叔因此成为康姓始祖。\n京兆衍派：殷纣的后裔武庚反叛，周公决定把殷纣遗民居住的疆土称卫国，交给当时已负贤名的康叔去治理，封卫君。康叔将卫国治理的很好，殷纣遗民口服心服，诚心归顺周朝。康叔后裔都住在京都。这是康姓堂号京兆衍派的由来。\n会稽衍派：唐朝时有康志睦，身材魁梧，善于骑马射箭，官至大将军。后来讨平张韶，升平卢节度使，又平了李同捷的叛乱，加检校尚书右仆射，封为会稽郡公。康姓因以“会稽”为其堂号。`
+            },
+            "蒋": {
+                character: "蒋",
+                derivations: ["福全衍派", "乐安世胄"],
+                traditions: ["福全传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/jiang.jpg" , alt:"福全衍派门楣示例" },
+                culture: `当你来到地图上标注的"福全之地"，你会发现这不仅是一个地名那样简单，它是一把钥匙，打开通往福建蒋氏家族悠久历史的大门。在福建这片历史悠久、文化底蕴深厚的土地上，姓氏文化作为中华民族传统文化的重要组成部分，一直深受人们的重视和传承。其中，"福全衍派"作为福建蒋氏的一个特定标识，不仅承载了蒋氏家族的历史渊源，也体现了福建地区独特的姓氏文化传承方式。今天客从何处来实践团带为大家科普的是福建蒋氏以及福全衍派。\n蒋姓出自姬姓。西周初期，周公姬旦的第三子伯龄分封于蒋（今河南光州固始东北蒋集），建立蒋国。公元前617年，蒋国为楚国所灭，其族徙于乐安故地（今山东广饶、博兴一带），蒋氏即以“乐安”为郡望，书“乐安世胄”。\n元末，先世世居安徽徽州歙县的蒋成，随父兄徙居凤阳府寿州延寿乡。四子蒋旺随从明太祖朱元璋驱驰征战，为明朝开国功臣。明洪武二十五年(1392)，蒋旺任福建永宁卫福全所世袭罔替正千户，遂籍晋江，为福全蒋氏开基祖。\n"福全衍派"中的"衍派"一词，在姓氏文化中通常指代姓氏的发源、渊源或支脉。福建蒋氏的"福全衍派"，是蒋氏家族在福建地区繁衍发展过程中形成的一个特定支脉或分支。`
+            },
+            "姜": {
+                character: "姜",
+                derivations: ["磻溪衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `姜姓源于烈山氏，出自炎帝神农氏出生姜水，属于以居邑名为姓。神农氏的后裔姜太公，即吕尚，是齐国的创建者，因辅佐周王朝得天下而被封于吕，所以才从封地为姓氏。战国时期，姜姓齐国被田和所灭，吕尚的后代分散到各地，有姓吕姓者，也有姓姜姓者。\n姜姓又源于“癸”（癸+女=姜），“姜”姓本意女癸所生，是女癸的后代。\n磻溪衍派：相传，周文王在磻溪遇到吕尚（姜子牙）钓鱼，在姜太公鼎力支持与协助下，周武王姬发成功推翻了暴虐无道的商纣王，使得周王朝得以建立。`
+            },
+            "江": {
+                character: "江",
+                derivations: ["淮阳衍派", "济阳衍派"],
+                traditions: ["六桂传芳"],
+                lintels: [],
+                culture: `江姓出自嬴姓，为古帝颛顼的玄孙伯益之后。伯益因辅佐大禹治水有功，帝舜时赐他嬴姓。西周时，伯益的后裔受封于江，建立江国。至周襄王二十九年，被楚所灭，国人以国名为氏而姓江。\n济阳衍派、淮阳衍派：江姓发源在河南正阳，亡国后的江姓子孙，先自正阳向北逃到淮阳,又自淮阳继续北迁到济阳考城，在此发展成为名门巨族,所以江姓用“济阳”“淮阳”作为郡号。\n六桂传芳：源于翁乾度六子分姓（江、洪、翁、方、龚、汪）的典故，北宋建立后，六兄弟先后登进士第，同朝为官。福建的江氏后人也常以“六桂传芳”作为门匾。`
+            },
+            "简": {
+                character: "简",
+                derivations: ["范阳衍派", "洛川衍派"],
+                traditions: ["在续传芳"],
+                lintels: [],
+                culture: `简姓出自姬姓、耿姓、检姓。春秋时，晋国有大夫狐鞫居，他的祖先是唐叔虞的支裔。狐鞫居的封邑在续，死后谥为续简子，世称续简伯，他的子孙后代便以其谥号为姓，称简姓。\n范阳衍派：简氏以河北的范阳（后改涿郡）为繁衍中心。三国魏时改涿郡为范阳郡，相当于现在河北省涿县及北京市昌平区、房山区一带。《简氏祖先考》曰：“在涿郡者，汉时有简卿，其在范阳者，三国时有简雍。”`
+            },
+            "纪": {
+                character: "纪",
+                derivations: ["平阳衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `纪姓源于姜姓，属于以国名为氏。西周初年，周王为了追念先圣先王的功德，封炎帝的一个后代于纪地（今山东寿光），建立纪国。纪国一共存在了五百年，其中公元前1046~前691年是独立国家。亡国后的纪国王族子孙以故国名为姓氏，称纪氏，世代相传。\n平阳衍派：纪氏望出平阳郡，是纪姓家族历史上的重要聚居地，承载着深厚的家族文化底蕴，部分子孙以平阳堂号。`
+            },
+            "黄": {
+                character: "黄",
+                derivations: ["江夏衍派", "紫云衍派", "莆阳衍派", "金墩衍派", "燕山衍派"],
+                traditions: ["六叶传芳", "江夏传芳", "紫云传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/huang.jpg" , alt:"龙塘衍派门楣示例" },
+                culture: `据《诸暨孝义黄氏族谱》所载，黄氏为嬴姓十四氏之一。帝舜时，伯益因助禹治水有功，故受帝舜赐姓嬴。其后裔中有黄氏者，在今河南潢川建立黄国。春秋时期，黄国被楚国所灭，亡国后的黄国子孙，以国名为氏。\n江夏衍派、江夏传芳：黄国亡国后，族人中一部分逃亡至各诸侯国避难，有一支族人迁到今武汉江夏区一带，发展成为汉代著名的江夏黄氏。\n紫云衍派、紫云传芳：唐初黄守恭在泉州开辟桑园，因桑园桑开白莲，遂献园建寺（开元寺），又因建寺时曾有紫云盖地，遂别称紫云寺。黄守恭被尊为江夏紫云黄氏始祖，其后裔以紫云为堂号。\n莆阳衍派、金墩衍派：西晋后期，黄彦丰为避乱举家入闽。其后历传至黄岸入莆田，传莆阳黄氏一派。其后裔黄府，登宋隆兴六年进士，自兴化军城再迁金墩为金墩始祖。子孙以“金墩衍派”为灯号。`
+            },
+            "胡": {
+                character: "胡",
+                derivations: ["新蔡衍派"],
+                traditions: ["安定传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/hu.png" , alt:"安定传芳门楣示例" },
+                culture: `胡姓出自妫姓、归姓、姬姓和外族改姓。据胡文公碑铭所记：“其先祖出自妫姓。”说明胡姓之源出于虞氏，系胡公满之后裔。周武王封虞阏父的儿子妫满为陈侯，并把女儿姬嫁给妫满，让他奉守舜帝的宗祀，妫满死后，谥号陈胡公，也叫胡公满，其子孙以谥为姓，称为胡姓，妫满也就是胡姓的始祖。\n新蔡衍派：胡姓望出安定、新蔡二郡。尚书左仆射胡奋及其后人居河南新蔡而得新蔡郡望之名。\n安定传芳：汉代胡建，因居安定而得名。三国魏国大将胡遵，安定人，他有六子，最著名者是胡奋，他在晋武帝时屡立战功，官做到尚书仆射、镇南大将军。南北朝时期，胡广后裔胡国珍之女胡充华成为北魏皇太后，胡姓步入了历史上最为辉煌时期。`
+            },
+            "侯": {
+                character: "侯",
+                derivations: [],
+                traditions: ["上谷传芳"],
+                lintels: [],
+                culture: `侯姓来源主要有四：出自姒姓（夏禹后代）、出自姬姓（晋侯缙子孙以爵侯为姓）、来自叔段（郑国的共叔段子孙）、由魏晋南北朝时期少数民族复姓改为侯姓。\n宋恭宗德祐二年(1276)，元兵攻陷临安，太常寺正卿侯宗贵率九子与文天祥、张世杰等共扶宋幼主赵昰、赵昺闯关播越至泉州。南宋亡后，侯宗贵与长、次、三、四子留武荣，卜居南安十八都丰年里后头境（今罗东镇维新村）。\n上谷传芳：出自姬姓的后代。周武王之子叔虞（周成王之弟）的后代晋侯缗，其国于公元前678年被曲沃武公所灭，晋侯缗子孙散布其他诸侯国，以爵侯为姓。以后，逐步南迁。因上谷为侯氏的发祥地，故侯氏以“上谷”为堂号。`
+            },
+            "洪": {
+                character: "洪",
+                derivations: ["敦煌衍派", "翁山衍派", "英林衍派"],
+                traditions: ["三瑞传芳", "六桂传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/hong.jpg" , alt:"敦煌衍派门楣示例" },
+                culture: `洪氏是炎帝神农氏的后人，炎帝的后代共工担任着治理水利的官职。到了东汉末期，后人共普为了避乱，隐居到甘肃敦煌，因为感念祖先水德，便在“共”字旁边加上三点水，“共”字遇水为“洪”，遂洪氏后人以“敦煌”为堂号。\n六桂传芳：源于翁乾度六子分姓（洪、江、翁、方、龚、汪）的典故，北宋建立后，六兄弟先后登进士第，同朝为官。洪氏后人也常以“六桂传芳”作为门匾。\n英林衍派、翁山衍派：唐朝的时候，河南光州固始人十四朝奉公（名古淡）随王审知三兄弟入闽来到泉州。经过多次迁居，十四朝奉公最终在晋江英林（古称翁山）定居下来，成为英林洪氏的一世祖。`
+            },
+            "贺": {
+                character: "贺",
+                derivations: ["广平衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `贺氏一说出自姜姓，春秋战国时的齐国齐桓公江小白之孙为庆克。庆克的儿子名封，以父亲的字为姓，叫庆封。到了东汉时期，庆氏后裔庆纯官拜侍中，为避汉安帝之父清河王刘庆之名讳，改姓名为贺纯，其后代便相传为贺氏。\n广平衍派：魏、晋、南北朝时期，因北方兵连祸接，各民族不断大举南迁，使得南方的贺氏家族分布更广。又因会稽庆氏始祖庆忌曾经寓居于春秋时卫国的艾城，而卫国的艾城在后来的广平郡范围，就以广平为郡望。`
+            },
+            "何": {
+                character: "何",
+                derivations: ["庐江衍派", "灞江衍派"],
+                traditions: ["好德传芳"],
+                lintels: ["庐江衍派"],
+                culture: `何姓出自姬姓，分自韩姓。周武王弟叔虞之孙食邑韩源，号曰韩侯，世代袭之，后成为韩国。战国末秦灭六国，秦王遇刺疑六国遗臣所为，韩之世胄孙成为避祸改何姓，携妻羌氏遁于庐江县，子孙世居的庐江县是何氏发祥地，故称庐江何。\n唐代中原何姓第一次入闽是在唐代总章二年，河南光州固始人何嗣韩随岭南行军总管陈政父子入闽平乱，被委任以安抚之职，平息叛乱后驻镇泉州，食采螺阳，被尊为“安抚公”。\n好德传芳：闽南何氏“好德堂”的开基祖为何添治，明代的时候，他在泉州城南经营织造生意，为人勤奋且极为信用，家业日渐兴旺。他曾将拾到的金银财宝归还失主，周围邻里被他拾金不昧的精神感动，便将他的织造坊称为“好德坊”，他的后人便以“好德传芳”为堂号。`
+            },
+            "郭": {
+                character: "郭",
+                derivations: ["汾阳衍派"],
+                traditions: ["西湖流芳", "汾阳传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/guo.jpg" , alt:"汾阳衍派门楣示例" },
+                culture: `郭姓出自姬姓，与周王室同源。周武王封文王季弟虢叔于西虢。平王遂求虢叔裔孙郭壬，封于郭（山西阳曲），是为郭公。“虢”、“郭”同声之转，其后延用而为姓，郭壬被尊为郭氏受姓始祖。在泉州，还有部分郭姓后裔源自阿拉伯后裔。宋元时期，一些阿拉伯伊斯兰教徒择居泉州，改汉姓，以郭为姓。\n汾阳衍派、汾阳传芳：唐中叶，陕西华阴郭子仪（郭壬六十七世孙），平安史之乱，中兴唐室，封汾阳王，其后郭氏遂以“汾阳”为堂号。郭子仪六子郭暧仕于河南光州，家于固始。唐末黄巢盗匪猖獗，郭镕（郭暧四子）与侄郭嵩避乱从王审知的从弟王想入闽。`
+            },
+            "关": {
+                character: "关",
+                derivations: ["函谷衍派"],
+                traditions: ["龙逢传芳"],
+                lintels: [],
+                culture: `关姓出自黄帝后裔（关龙逢）、官职（关尹喜）、少数民族改姓。相传关龙逢是黄帝裔孙高阳氏颛顼的后代，在夏朝末帝夏桀时担任较高的官职。夏桀整天饮酒为乐，不理政事，他加以劝谏，因触怒夏桀而被杀。后来，关龙逢的后代为纪念他，便以关为姓。\n函谷衍派：相传春秋时，周大夫喜曾率兵驻守函谷关，任关尹，因此称他为尹喜或关尹喜。尹喜的后人以其官职名为姓,以其驻地为“函谷衍派”。\n龙逢传芳：纪念夏代忠臣关龙逢。`
+            },
+            "顾": {
+                character: "顾",
+                derivations: ["武陵衍派", "会稽衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `顾姓有“南顾”和“北顾”之分，“北顾”属于以国为姓：夏朝有个诸侯国叫顾国，商汤灭顾国后，顾国王族子孙用原国名作为姓氏；“南顾”则属于以封号为姓：越王勾践的裔孙闽君摇，为东海王，后摇又封自己的独子为顾余侯，他的支庶子孙用他的封号的第一字作为姓，这支被称为顾氏正宗。由于顾姓主要发源和发展于会稽（江苏吴县），所以在历史上会稽也被当作顾姓的著名郡望之一。\n武陵衍派：会稽顾姓中后来又有人迁武陵（今苏州武陵溪），并在当地迅猛发展，武陵也因此被尊为顾姓的另一大郡望。`
+            },
+            "龚": {
+                character: "龚",
+                derivations: ["武陵衍派", "沙堤衍派"],
+                traditions: ["六桂传芳"],
+                lintels: [],
+                culture: `龚氏起源于共工，后为避难在“共”字上加一“龙”字，《万姓统谱》有载：“龚氏之先共氏，避难加龙为龚，望出武陵。”所以龚氏也使用“武陵”这个堂号。\n六桂传芳：源于翁乾度六子分姓（洪、江、翁、方、龚、汪）的典故。北宋建立后，六兄弟先后登进士第，同朝为官。龚氏后人也常以“六桂传芳”作为门匾。\n沙堤衍派：沙堤龚氏，源出共工，根连渤海,脈自武陵。因五代避乱迁居沙堤,以龚氏十三祖为一世祖,其后人也以“沙堤”为堂号。`
+            },
+            "高": {
+                character: "高",
+                derivations: ["凤岗衍派", "渤海衍派"],
+                traditions: ["有继传芳"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/gao.png", alt: "凤岗衍派门楣示例" },
+                culture: `高姓出自高夷族、姜姓。高姓的得姓始祖是公子高，他是姜子牙的八世孙齐文公之子，受封于高（今山东邹平东北部一带），因而得姓高。公子高的孙子溪因平定内乱有功，被齐桓公赐以祖父的字为姓，即高姓。\n凤岗衍派：高姓入闽，系由唐末避黄巢之乱而来。其远祖侯之裔孙高钢，携眷入闽，卜福州怀安凤岗，是为高氏入闽始祖，“凤岗”便成为高姓的堂号。\n渤海衍派：高姓有渤海、渔阳、辽东、广陵、河南诸望。而泉州高姓，则以渤海为郡望。\n有继传芳：泉州宋代38科进士，高家就出了58个进士。泉郡太守王十朋说：“泉南一郡，不如高家一门。”南宋理学家朱熹赞曰：“著姓冠巨族，人文甲一邦。”并书“有继”二字，后世高氏亦有以“有继”为堂号者。`
+            },
+            "富": {
+                character: "富",
+                derivations: ["江陵衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `富氏根据不同记载，有八种起源。始祖是富辰，史称他为春秋第一忠臣。周王室有个大夫名姬辰，因其封地在富邑，所以世人称其为富辰。富辰为了保护周襄王血战至死，同宗族的数百人与他一起皆战死沙场。在富辰的后裔子孙中，多以先祖封邑名称为姓氏，奉富辰为富氏的得姓始祖。\n江陵衍派：江陵富氏则来源于满族富察氏。满族富察氏，亦称傅察氏、富尔察氏，源出唐朝末期女真族“通用三十姓”之一的蒲察氏，金国时期为女真蒲察部，后有人改汉姓为富氏。`
+            },
+            "傅": {
+                character: "傅",
+                derivations: [],
+                traditions: ["版筑传芳", "银青传芳"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/fu.png", alt: "版筑传芳门楣示例" },
+                culture: `傅姓最早源于姬姓，出自黄帝裔孙大由的封地傅邑，建立古傅国，子孙世居于此。今天的傅氏族人大多尊奉傅说为得姓始祖。\n版筑传芳：商朝高宗武丁夜梦得圣人傅说，得说于傅险中。是时说为胥靡，筑于傅险。武丁举以为相，殷国大治。故遂以傅险姓之，号曰傅。“傅说举于版筑之间”等名句典故，“版筑传芳”也因此成为了傅氏的族望。\n银青传芳：闽南地区常见的“银青传芳”“银青衍派”则与傅姓的开闽始祖傅实有关。唐僖宗年间，傅实奉敕入闽，傅实进兵泉州驱逐了当时放任手下骚扰良民的泉州刺史。唐王遂敕赐其银印青绶，并赐予傅实银青光禄大夫检校尚书左仆射的头衔，后来的傅氏自称“银青传芳”“银青衍派”。`
+            },
+            "冯": {
+                character: "冯",
+                derivations: ["荥阳衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `冯姓出自姬姓，相传是周文王第15子毕公高的后代。毕公高的裔孙毕公万受封于魏，支孙采食于冯城（今河南荥阳西），其后以邑为姓。其二出自归姓，春秋时郑国大夫冯简子，他因功封于冯邑（今河南荥阳西），子孙以冯为姓。\n荥阳衍派：春秋时郑国大夫冯简子，他因功封于荥阳冯邑（今河南荥阳西），以地取姓，子孙以冯为姓，以荥阳为郡号。`
+            },
+            "方": {
+                character: "方",
+                derivations: ["河南衍派"],
+                traditions: ["六桂堂"],
+                lintels: [],
+                culture: `方姓来源于炎帝后裔（方雷氏）和周代卿士方叔。相传炎帝第八代孙榆周之子雷有功，黄帝遂将河南嵩山附近的方山封赠予他，方雷氏因此而得名。周代卿士方叔，奉命率兵车在千平定荆蛮，捍卫了周朝。方叔与周宣王同宗，姓姬，名寰，字方叔，世代子孙以字为姓，遂称方氏。\n河南衍派：多数谱志认为，方雷氏和方叔都是方姓始祖。方氏列祖名宦俱著于夏、商、周三代，显于河洛间，故堂号称“河南堂”。\n六桂堂：“六桂方氏”，系福建省方氏旺族。方廷范在唐大顺二年(891年)登进士，定居于莆田刺桐巷。生有六个儿子，个个荣登进士，封官受禄，因此世称“金紫六桂方氏”。`
+            },
+            "范": {
+                character: "范",
+                derivations: ["高平衍派", "清江衍派"],
+                traditions: ["麦舟传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/fan.jpg" , alt:"高平衍派门楣示例" },
+                culture: `据《古今姓氏书辨证》和《元和姓纂》所载，周成王灭唐，迁之杜，为杜伯。杜伯无罪见杀，其子杜隰叔奔晋，其玄孙士会因功封于范（今河南省范县），子孙遂以封邑范为姓，称为范氏。\n高平衍派：《郡望百家姓》及《姓氏考略》云：范氏望出高平郡，即今山东巨野一带。\n麦舟传芳：据《冷斋夜话》记载，范仲淹的儿子替父亲拜访石延年。没想到石家人正在办理丧事，由于家中贫寒，竟然无法让逝者下葬。范仲淹的儿子把一船麦子还有船只同时变卖，换到银两帮助石家人渡过难关。后以“麦舟”为赙赠助丧之典故。`
+            },
+            "杜": {
+                character: "杜",
+                derivations: ["瀛洲衍派"],
+                traditions: ["瀛洲传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/du.jpg" , alt:"瀛洲传芳门楣示例" },
+                culture: `杜姓其来源有杜康、姜姓、祁姓和外姓的改姓等多种说法，尊杜伯或者杜康为得姓始祖。\n上古时代，帝舜封尧的儿子丹朱在唐。到了周初成王时，唐国因不敬当朝天子被灭，周公旦把唐国原国君后裔迁到杜，因此改称唐杜氏。至周宣王时杜伯无罪被杀，杜国子孙一部分出逃，留居杜城者为杜氏。\n瀛洲衍派：杜氏后裔杜如晦是唐初最著名的宰相之一。杜如晦学识渊博，居当时学问最好的“瀛洲十八学士”，之首，故有“杜瀛洲”的美誉。`
+            },
+            "董": {
+                character: "董",
+                derivations: ["陇西衍派", "雁门衍派", "沙堤衍派"],
+                traditions: ["圈龙传芳", "玉笋传芳"],
+                lintels: [],
+                culture: `董姓主要源于舜帝赐姓、官职、姓氏。相传黄帝裔孙叔安封于飂，称飂叔安，其子董父，驯龙有术，被舜帝赐姓董，后代便以董为姓。也有说法表示周朝大夫辛有两个儿子在晋国掌管典籍，被人们称为“董督”或“董史”。其子孙世袭晋国“董史”之职，后面便把职务“董”作为姓氏。\n陇西衍派：唐光启元年(885年)，董漳为避乱，由陇西从军随王潮兄弟入闽，居莆田，其子董思安勇冠一时。后裔于宋初退陷泉州岭井,播迁晋江沙堤（今属石狮永宁）。其郡望为“陇西”。\n玉笋传芳：在福建省石狮市永宁镇沙堤村的董氏宗祠中，耸立着一“石笋”，形同春笋，无斧凿之痕迹，乃天然而生成。乡人传闻，此石笋摄日月之精华，禀士气以熏蒸，有“活笋”之称。故沙堤董氏素以“玉笋传芳”为荣。`
+            },
+            "白": {
+                character: "白",
+                derivations: ["南阳衍派", "香山衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `白姓源自嬴姓、芈姓、出自地名为氏、出自部落、出自改姓。楚白公胜为春秋楚平王太子建之子，因封于白，为白公，世称 “白公胜”，其子孙因以白为姓。\n南阳衍派：战国秦昭 35 年始置南阳郡。五代时期，白氏迁于古时南阳，后繁衍旺盛，形成当地望族，且以 “南阳” 为郡望堂号。\n香山衍派：唐代大诗人白居易晚年居洛阳（现在的河南）香山，成为白姓迁洛始祖。他的后代分布在现在的河南偃师、伊川、宜阳、巩义、郑州、新郑、沁阳等地。`
+            },
+            "蔡": {
+                character: "蔡",
+                derivations: ["济阳衍派", "莆阳衍派", "青阳衍派"],
+                traditions: ["忠惠传芳", "齐阳传芳", "荔谱传芳", "塔江传芳", "紫坂传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/cai.jpg" , alt:"济阳衍派门楣示例" },
+                culture: `梧林蔡氏是北宋泉州知府蔡襄的后人，从梧林民居上"忠惠传芳"的堂号及篆刻的各类称颂蔡襄的诗词可见，梧林人对这位清廉耿直、勤政爱民的先祖十分崇敬。\n明洪武年间，梧林古村落的肇基祖为石狮市祥芝镇山兜村丰田始祖蔡均用的第六个儿子蔡旺生。当年蔡旺生沿溪赶放鸭群至此，鸭群盘桓不去，蔡旺生认为这是天意的指示，便定居于此，繁衍生息。清初，梧林已初步形成村庄规模。\n济阳衍派：秦相蔡泽，望出济阳。蔡泽长子蔡袭为秦朝大夫，有功于国，受封济阳郡，当时蔡氏于济阳县中，蔚为望族。唐末蔡用元、蔡用明随王潮入闽，蔡用元迁居莆田，蔡用明迁居晋江青阳。\n忠惠传芳、荔谱传芳：北宋蔡襄著有《荔枝谱》，他两知泉州，做出巨大贡献，修建现存最早的跨海梁式石桥 —— 洛阳桥。蔡襄去世后赠谥 “忠惠”，因此 “忠惠传芳”“荔谱传芳” 成为蔡氏后人堂号。`
+            },
+            "车": {
+                character: "车",
+                derivations: ["锦田衍派", "龙溪衍派"],
+                traditions: ["萤照传芳"],
+                lintels: [],
+                culture: `车姓主要有两大来源：出自姚姓（舜后代田氏之裔），汉朝丞相田千秋，汉帝特准田玉峰乘坐车辇出入朝堂，从此赢得了 “车丞相” 这一雅号，其后裔子孙中竟有改姓氏为车氏者。出自嬴姓和姚姓，春秋时期秦穆公的大夫子舆氏，秦穆公逝世时，殉葬就有子舆氏的三个贤臣（“三良”），他们的后裔子孙中皆改为单姓车氏、舆氏。\n萤照传芳：西晋朝时期的吏部尚书、护军将军车胤。车胤自幼聪颖好学，因家境贫寒，常无油点灯，夏夜就捕捉萤火虫用以照明，人称 “囊萤夜读”。后人以 “萤照传芳” 纪念他。\n龙溪衍派、锦田衍派：车千秋派分随闽王审知入闽，定居龙溪。车垵车氏始祖于明顺庚戌年（1460 年）从龙溪（雅称锦田）来泉经商，遂居车垵，其后裔常用堂号 “龙溪衍派”“锦田衍派”。`
+            },
+            "程": {
+                character: "程",
+                derivations: ["广平衍派"],
+                traditions: ["安定传芳"],
+                lintels: [],
+                culture: `程姓主要源于伏羲氏（程部落）与姬姓（周文王少子荀侯后代）。\n广平衍派：武王灭商建周后，重黎的裔孙伯符，因为向周王敬献 “泰山之车、井中之玉、双穗之禾” 有功，被封在广平程地，建立了程国。广平郡是程姓的第一个郡望之地。\n安定传芳：安定郡置于西汉元鼎三年（公元前 114 年）。安定后来成了程姓的堂号之一。`
+            },
+            "出": {
+                character: "出",
+                derivations: [],
+                traditions: ["燕山传芳"],
+                lintels: [],
+                culture: `出姓源于鲜卑族，出自汉朝时期鲜卑拓跋氏族乞伏部出连之都，属于汉化改姓。出连之都是十六国时西秦国丞相。另有说法源于蒙古族，出自元朝内廷太尉、明朝海四侯纳哈出的后裔。\n燕山传芳：出姓堂号 “燕山”。因出姓先祖来自燕山之北，故出姓后裔以 “燕山” 为堂号，并建出姓家庙。`
+            },
+            "戴": {
+                character: "戴",
+                derivations: ["谯国行派"],
+                traditions: ["谯国传芳", "注礼传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/dai.jpg" , alt:"谯国传芳门楣示例" },
+                culture: `戴氏先祖系商汤后裔微子的后代，宋国第十一位君主，有名子钩，逝世后谥号为 “戴武公”，其子孙遂以谥号 “戴” 为氏。\n谯国行派：在魏晋时，戴姓在谯国（今安徽亳州一带）成为望族，习称谯国戴。唐末中原战乱，大庭戴氏始祖戴九郎自河南光州固始县随开闽王南下入闽，于唐僖宗光启年间（公元 885-887 年）至南安诗山锦坂（大庭古称），喜其山水佳美，于是就住了下来。其后子孙繁衍生息，成为泉南一大望族，后人以 “谯国” 为堂号。\n注礼传芳：戴德、戴圣是经文礼学的 “大戴学” 和 “小戴学” 的开创者。由于二人在礼学上的重大贡献，也被后人尊称为 “儒宗”。戴氏后人因戴德、戴圣在礼学上有重大贡献而以 “注礼传芳” 为门匾。`
+            },
+            "邓": {
+                character: "邓",
+                derivations: ["南阳衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `邓姓来源主要有三：出自姒姓（夏的始祖禹为姒姓）或曼姓（殷王武丁封他的叔父曼于邓国曼城）、出自李氏（南唐后主李煜第八子李从镒后裔，宋太宗灭南唐后，李从镒之子李天和以父封地为氏，其后世子孙亦称邓氏）。\n南阳衍派：武丁为商朝皇帝时封其叔父为邓侯，食邑于河北南阳（今属河南），邓侯之后即以 “邓” 为姓，后裔子孙多居于河南南阳，故郡望、堂号为 “南阳”。`
+            },
+            "丁": {
+                character: "丁",
+                derivations: [],
+                traditions: ["蚊筑传芳", "聚书传芳", "忠孝传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ding.jpg" , alt:"聚书传芳门楣示例" },
+                culture: `丁姓的起源较多，主要源于姜姓，出自姜太公之子姜伋的谥号。姜伋逝世后，周王室敕封其谥号为 “丁公伋”，其后裔子孙中便以其谥号为姓氏者，称丁氏，史称丁氏正宗。泉州的丁姓则多源于来华阿拉伯穆斯林所姓，如晋江陈埭丁氏，先祖为赛典赤赡思丁，后裔遂用 “丁” 字作为汉姓。\n聚书传芳：“聚书” 一词最早出自宋代洛阳开封祥符人丁顗，好藏书。明万历年间，魏忠贤想陷害丁氏后裔丁启濬未成，皇帝便夸赞他 “不愧为聚书之裔”，表彰他读了很多书，自此以后，丁氏即以 “聚书” 一词为自己的堂号。`
+            },
+            "傅": {
+                character: "傅",
+                derivations: [],
+                traditions: ["版筑传芳", "银青传芳"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/fu.png", alt: "版筑传芳门楣示例" },
+                culture: `傅姓最早源于姬姓，出自黄帝裔孙大由的封地傅邑，建立古傅国，子孙世居于此。今天的傅氏族人大多尊奉傅说为得姓始祖。\n版筑传芳：商朝高宗武丁夜梦得圣人傅说，得说于傅险中。是时说为胥靡，筑于傅险。武丁举以为相，殷国大治。故遂以傅险姓之，号曰傅。“傅说举于版筑之间”等名句典故，“版筑传芳”也因此成为了傅氏的族望。\n银青传芳：闽南地区常见的“银青传芳”“银青衍派”则与傅姓的开闽始祖傅实有关。唐僖宗年间，傅实奉敕入闽，傅实进兵泉州驱逐了当时放任手下骚扰良民的泉州刺史。唐王遂敕赐其银印青绶，并赐予傅实银青光禄大夫检校尚书左仆射的头衔，后来的傅氏自称“银青传芳”“银青衍派”。`
+            },
+            "高": {
+                character: "高",
+                derivations: ["凤岗衍派", "渤海衍派"],
+                traditions: ["有继传芳"],
+                lintels: { src: "https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/gao.png", alt: "凤岗衍派门楣示例" },
+                culture: `高姓出自高夷族、姜姓。高姓的得姓始祖是公子高，他是姜子牙的八世孙齐文公之子，受封于高（今山东邹平东北部一带），因而得姓高。公子高的孙子溪因平定内乱有功，被齐桓公赐以祖父的字为姓，即高姓。\n凤岗衍派：高姓入闽，系由唐末避黄巢之乱而来。其远祖侯之裔孙高钢，携眷入闽，卜福州怀安凤岗，是为高氏入闽始祖，“凤岗”便成为高姓的堂号。\n渤海衍派：高姓有渤海、渔阳、辽东、广陵、河南诸望。而泉州高姓，则以渤海为郡望。\n有继传芳：泉州宋代38科进士，高家就出了58个进士。泉郡太守王十朋说：“泉南一郡，不如高家一门。”南宋理学家朱熹赞曰：“著姓冠巨族，人文甲一邦。”并书“有继”二字，后世高氏亦有以“有继”为堂号者。`
+            },
+            "冯": {
+                character: "冯",
+                derivations: ["荥阳衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `冯姓出自姬姓，相传是周文王第15子毕公高的后代。毕公高的裔孙毕公万受封于魏，支孙采食于冯城（今河南荥阳西），其后以邑为姓。其二出自归姓，春秋时郑国大夫冯简子，他因功封于冯邑（今河南荥阳西），子孙以冯为姓。\n荥阳衍派：春秋时郑国大夫冯简子，他因功封于荥阳冯邑（今河南荥阳西），以地取姓，子孙以冯为姓，以荥阳为郡号。`
+            },
+            "方": {
+                character: "方",
+                derivations: ["河南衍派"],
+                traditions: ["六桂堂"],
+                lintels: [],
+                culture: `方姓来源于炎帝后裔（方雷氏）和周代卿士方叔。相传炎帝第八代孙榆周之子雷有功，黄帝遂将河南嵩山附近的方山封赠予他，方雷氏因此而得名。周代卿士方叔，奉命率兵车在千平定荆蛮，捍卫了周朝。方叔与周宣王同宗，姓姬，名寰，字方叔，世代子孙以字为姓，遂称方氏。\n河南衍派：多数谱志认为，方雷氏和方叔都是方姓始祖。方氏列祖名宦俱著于夏、商、周三代，显于河洛间，故堂号称“河南堂”。\n六桂堂：“六桂方氏”，系福建省方氏旺族。方廷范在唐大顺二年(891年)登进士，定居于莆田刺桐巷。生有六个儿子，个个荣登进士，封官受禄，因此世称“金紫六桂方氏”。`
+            },
+            "范": {
+                character: "范",
+                derivations: ["高平衍派", "清江衍派"],
+                traditions: ["麦舟传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/fan.jpg" , alt:"高平衍派门楣示例" },
+                culture: `据《古今姓氏书辨证》和《元和姓纂》所载，周成王灭唐，迁之杜，为杜伯。杜伯无罪见杀，其子杜隰叔奔晋，其玄孙士会因功封于范（今河南省范县），子孙遂以封邑范为姓，称为范氏。\n高平衍派：《郡望百家姓》及《姓氏考略》云：范氏望出高平郡，即今山东巨野一带。\n麦舟传芳：据《冷斋夜话》记载，范仲淹的儿子替父亲拜访石延年。没想到石家人正在办理丧事，由于家中贫寒，竟然无法让逝者下葬。范仲淹的儿子把一船麦子还有船只同时变卖，换到银两帮助石家人渡过难关。后以“麦舟”为赙赠助丧之典故。`
+            },
+            "杜": {
+                character: "杜",
+                derivations: ["瀛洲衍派"],
+                traditions: ["瀛洲传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/du.jpg" , alt:"瀛洲传芳门楣示例" },
+                culture: `杜姓其来源有杜康、姜姓、祁姓和外姓的改姓等多种说法，尊杜伯或者杜康为得姓始祖。\n上古时代，帝舜封尧的儿子丹朱在唐。到了周初成王时，唐国因不敬当朝天子被灭，周公旦把唐国原国君后裔迁到杜，因此改称唐杜氏。至周宣王时杜伯无罪被杀，杜国子孙一部分出逃，留居杜城者为杜氏。\n瀛洲衍派：杜氏后裔杜如晦是唐初最著名的宰相之一。杜如晦学识渊博，居当时学问最好的“瀛洲十八学士”，之首，故有“杜瀛洲”的美誉。`
+            },
+            "董": {
+                character: "董",
+                derivations: ["陇西衍派", "雁门衍派", "沙堤衍派"],
+                traditions: ["圈龙传芳", "玉笋传芳"],
+                lintels: [],
+                culture: `董姓主要源于舜帝赐姓、官职、姓氏。相传黄帝裔孙叔安封于飂，称飂叔安，其子董父，驯龙有术，被舜帝赐姓董，后代便以董为姓。也有说法表示周朝大夫辛有两个儿子在晋国掌管典籍，被人们称为“董督”或“董史”。其子孙世袭晋国“董史”之职，后面便把职务“董”作为姓氏。\n陇西衍派：唐光启元年(885年)，董漳为避乱，由陇西从军随王潮兄弟入闽，居莆田，其子董思安勇冠一时。后裔于宋初退陷泉州岭井,播迁晋江沙堤（今属石狮永宁）。其郡望为“陇西”。\n玉笋传芳：在福建省石狮市永宁镇沙堤村的董氏宗祠中，耸立着一“石笋”，形同春笋，无斧凿之痕迹，乃天然而生成。乡人传闻，此石笋摄日月之精华，禀士气以熏蒸，有“活笋”之称。故沙堤董氏素以“玉笋传芳”为荣。`
+            },
+            "白": {
+                character: "白",
+                derivations: ["南阳衍派", "香山衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `白姓源自嬴姓、芈姓、出自地名为氏、出自部落、出自改姓。楚白公胜为春秋楚平王太子建之子，因封于白,为白公,世称 “白公胜”,其子孙因以白为姓。\n南阳衍派：战国秦昭 35 年始置南阳郡。五代时期，白氏迁于古时南阳，后繁衍旺盛，形成当地望族，且以 “南阳” 为郡望堂号。\n香山衍派：唐代大诗人白居易晚年居洛阳（现在的河南）香山，成为白姓迁洛始祖。他的后代分布在现在的河南偃师、伊川、宜阳、巩义、郑州、新郑、沁阳等地。`
+            },
+            "蔡": {
+                character: "蔡",
+                derivations: ["济阳衍派", "莆阳衍派", "青阳衍派"],
+                traditions: ["忠惠传芳", "齐阳传芳", "荔谱传芳", "塔江传芳", "紫坂传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/cai.jpg" , alt:"济阳衍派门楣示例" },
+                culture: `梧林蔡氏是北宋泉州知府蔡襄的后人，从梧林民居上"忠惠传芳"的堂号及篆刻的各类称颂蔡襄的诗词可见，梧林人对这位清廉耿直、勤政爱民的先祖十分崇敬。\n明洪武年间，梧林古村落的肇基祖为石狮市祥芝镇山兜村丰田始祖蔡均用的第六个儿子蔡旺生。当年蔡旺生沿溪赶放鸭群至此，鸭群盘桓不去，蔡旺生认为这是天意的指示，便定居于此，繁衍生息。清初，梧林已初步形成村庄规模。\n济阳衍派：秦相蔡泽，望出济阳。蔡泽长子蔡袭为秦朝大夫，有功于国，受封济阳郡，当时蔡氏于济阳县中，蔚为望族。唐末蔡用元、蔡用明随王潮入闽，蔡用元迁居莆田，蔡用明迁居晋江青阳。\n忠惠传芳、荔谱传芳：北宋蔡襄著有《荔枝谱》，他两知泉州，做出巨大贡献，修建现存最早的跨海梁式石桥 —— 洛阳桥。蔡襄去世后赠谥 “忠惠”，因此 “忠惠传芳”“荔谱传芳” 成为蔡氏后人堂号。`
+            },
+            "车": {
+                character: "车",
+                derivations: ["锦田衍派", "龙溪衍派"],
+                traditions: ["萤照传芳"],
+                lintels: [],
+                culture: `车姓主要有两大来源：出自姚姓（舜后代田氏之裔），汉朝丞相田千秋，汉帝特准田玉峰乘坐车辇出入朝堂，从此赢得了 “车丞相” 这一雅号，其后裔子孙中竟有改姓氏为车氏者。出自嬴姓和姚姓，春秋时期秦穆公的大夫子舆氏，秦穆公逝世时，殉葬就有子舆氏的三个贤臣（“三良”），他们的后裔子孙中皆改为单姓车氏、舆氏。\n萤照传芳：西晋朝时期的吏部尚书、护军将军车胤。车胤自幼聪颖好学，因家境贫寒，常无油点灯，夏夜就捕捉萤火虫用以照明，人称 “囊萤夜读”。后人以 “萤照传芳” 纪念他。\n龙溪衍派、锦田衍派：车千秋派分随闽王审知入闽，定居龙溪。车垵车氏始祖于明顺庚戌年（1460 年）从龙溪（雅称锦田）来泉经商，遂居车垵，其后裔常用堂号 “龙溪衍派”“锦田衍派”。`
+            },
+            "程": {
+                character: "程",
+                derivations: ["广平衍派"],
+                traditions: ["安定传芳"],
+                lintels: [],
+                culture: `程姓主要源于伏羲氏（程部落）与姬姓（周文王少子荀侯后代）。\n广平衍派：武王灭商建周后，重黎的裔孙伯符，因为向周王敬献 “泰山之车、井中之玉、双穗之禾” 有功，被封在广平程地，建立了程国。广平郡是程姓的第一个郡望之地。\n安定传芳：安定郡置于西汉元鼎三年（公元前 114 年）。安定后来成了程姓的堂号之一。`
+            },
+            "出": {
+                character: "出",
+                derivations: [],
+                traditions: ["燕山传芳"],
+                lintels: [],
+                culture: `出姓源于鲜卑族，出自汉朝时期鲜卑拓跋氏族乞伏部出连之都，属于汉化改姓。出连之都是十六国时西秦国丞相。另有说法源于蒙古族，出自元朝内廷太尉、明朝海四侯纳哈出的后裔。\n燕山传芳：出姓堂号 “燕山”。因出姓先祖来自燕山之北，故出姓后裔以 “燕山” 为堂号，并建出姓家庙。`
+            },
+            "戴": {
+                character: "戴",
+                derivations: ["谯国行派"],
+                traditions: ["谯国传芳", "注礼传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/dai.jpg" , alt:"谯国传芳门楣示例" },
+                culture: `戴氏先祖系商汤后裔微子的后代，宋国第十一位君主，有名子钩，逝世后谥号为 “戴武公”，其子孙遂以谥号 “戴” 为氏。\n谯国行派：在魏晋时，戴姓在谯国（今安徽亳州一带）成为望族，习称谯国戴。唐末中原战乱，大庭戴氏始祖戴九郎自河南光州固始县随开闽王南下入闽，于唐僖宗光启年间（公元 885-887 年）至南安诗山锦坂（大庭古称），喜其山水佳美，于是就住了下来。其后子孙繁衍生息，成为泉南一大望族，后人以 “谯国” 为堂号。\n注礼传芳：戴德、戴圣是经文礼学的 “大戴学” 和 “小戴学” 的开创者。由于二人在礼学上的重大贡献，也被后人尊称为 “儒宗”。戴氏后人因戴德、戴圣在礼学上有重大贡献而以 “注礼传芳” 为门匾。`
+            },
+            "邓": {
+                character: "邓",
+                derivations: ["南阳衍派"],
+                traditions: [],
+                lintels: [],
+                culture: `邓姓来源主要有三：出自姒姓（夏的始祖禹为姒姓）或曼姓（殷王武丁封他的叔父曼于邓国曼城）、出自李氏（南唐后主李煜第八子李从镒后裔，宋太宗灭南唐后，李从镒之子李天和以父封地为氏，其后世子孙亦称邓氏）。\n南阳衍派：武丁为商朝皇帝时封其叔父为邓侯，食邑于河北南阳（今属河南），邓侯之后即以 “邓” 为姓，后裔子孙多居于河南南阳，故郡望、堂号为 “南阳”。`
+            },
+            "丁": {
+                character: "丁",
+                derivations: [],
+                traditions: ["蚊筑传芳", "聚书传芳", "忠孝传芳"],
+                lintels: { src:"https://raw.githubusercontent.com/wyy2004-hqu/webtest/main/ding.jpg" , alt:"聚书传芳门楣示例" },
+                culture: `丁姓的起源较多，主要源于姜姓，出自姜太公之子姜伋的谥号。姜伋逝世后，周王室敕封其谥号为 “丁公伋”，其后裔子孙中便以其谥号为姓氏者，称丁氏，史称丁氏正宗。泉州的丁姓则多源于来华阿拉伯穆斯林所姓，如晋江陈埭丁氏，先祖为赛典赤赡思丁，后裔遂用 “丁” 字作为汉姓。\n聚书传芳：“聚书” 一词最早出自宋代洛阳开封祥符人丁顗，好藏书。明万历年间，魏忠贤想陷害丁氏后裔丁启濬未成，皇帝便夸赞他 “不愧为聚书之裔”，表彰他读了很多书，自此以后，丁氏即以 “聚书” 一词为自己的堂号。`
+            }
+        };
+
+        // 定义哪些姓氏是补充信息，需要显示归属声明
+        const supplementalSurnamesList = new Set(Object.keys(surnameData).filter(
+            // 排除少数几个最初就有详细描述的姓氏，其余都视为补充
+            s => !["李", "王", "陈", "曾", "许", "赵", "庄", "吕", "蒋", "董", "康", "苏"].includes(s)
+        ));
+
+        // DOM元素
+        const surnameInput = document.getElementById('surnameInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const noResults = document.getElementById('noResults');
+        const surnameChar = document.getElementById('surnameChar');
+        const surnameName = document.getElementById('surnameName');
+        const derivationList = document.getElementById('derivationList');
+        const traditionList = document.getElementById('traditionList');
+        const lintelList = document.getElementById('lintelList');
+        const cultureContent = document.getElementById('cultureContent');
+        const attributionNote = document.getElementById('attributionNote'); // 获取归属声明元素
+        const surnameTags = document.querySelectorAll('.surname-tag');
+        
+        // 浮动组件元素
+        const chatWidget = document.getElementById('chatWidget'); 
+
+        // 搜索功能
+        searchBtn.addEventListener('click', performSearch);
+        surnameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // 热门姓氏标签点击事件
+        surnameTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                const surname = this.getAttribute('data-surname');
+                surnameInput.value = surname;
+                performSearch();
+            });
+        });
+
+        // 执行搜索
+        function performSearch() {
+            const surname = surnameInput.value.trim();
+            
+            if (!surname) {
+                alert('请输入要查询的姓氏');
+                return;
+            }
+            
+            if (surnameData[surname]) {
+                displayResults(surnameData[surname], surname);
+            } else {
+                showNoResults();
+            }
+        }
+
+        // 显示查询结果
+        function displayResults(data, surname) {
+            // 1. 更新姓氏信息
+            surnameChar.textContent = data.character;
+            surnameName.textContent = data.character + '姓';
+            
+            // 2. 更新衍派信息 (不变)
+            derivationList.innerHTML = '';
+            if (data.derivations && data.derivations.length > 0) {
+                data.derivations.forEach(derivation => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-code-branch"></i> ${derivation}`;
+                    derivationList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-code-branch"></i> 暂无衍派信息`;
+                derivationList.appendChild(li);
+            }
+            
+            // 3. 更新传芳信息 (不变)
+            traditionList.innerHTML = '';
+            if (data.traditions && data.traditions.length > 0) {
+                data.traditions.forEach(tradition => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-leaf"></i> ${tradition}`;
+                    traditionList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-leaf"></i> 暂无传芳信息`;
+                traditionList.appendChild(li);
+            }
+            
+            // 4. 更新门楣文化信息 (不变)
+            lintelList.innerHTML = '';
+            if (data.lintels) {
+                if (typeof data.lintels === 'object' && !Array.isArray(data.lintels) && data.lintels.src) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <i class="fas fa-archway"></i> 
+                        <img src="${data.lintels.src}" alt="${data.lintels.alt}" style="width: 100%; max-width: 300px; margin-top: 10px; border: 1px solid #eee; border-radius: 4px;">
+                    `;
+                    lintelList.appendChild(li);
+                } 
+                else if (Array.isArray(data.lintels) && data.lintels.length > 0) {
+                    data.lintels.forEach(lintel => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<i class="fas fa-archway"></i> ${lintel}`;
+                        lintelList.appendChild(li);
+                    });
+                }
+                else {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-archway"></i> 暂无门楣文化信息`;
+                    lintelList.appendChild(li);
+                }
+            } else {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-archway"></i> 暂无门楣文化信息`;
+                lintelList.appendChild(li);
+            }
+            
+            // 5. 更新归属声明和文化简介 (新增逻辑)
+            cultureContent.textContent = data.culture;
+            
+            // 控制归属声明的显示
+            if (supplementalSurnamesList.has(surname)) {
+                attributionNote.style.display = 'block';
+            } else {
+                attributionNote.style.display = 'none';
+            }
+
+            
+            // 6. 显示结果区域 (不变)
+            resultsSection.style.display = 'block';
+            noResults.style.display = 'none';
+            
+            // 滚动到结果区域 (不变)
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 显示无结果
+        function showNoResults() {
+            resultsSection.style.display = 'none';
+            noResults.style.display = 'block';
+            
+            // 滚动到无结果区域
+            noResults.scrollIntoView({ behavior: 'smooth' });
+        }
+		// === 无限滚动长廊逻辑 ===
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.getElementById('scrollTrack');
+            // 获取所有的图片
+            const images = track.querySelectorAll('img');
+            
+            // 将现有的所有图片克隆一份，追加到末尾
+            // 这样当动画移动 50% 时，刚好无缝衔接到第一张
+            images.forEach(img => {
+                const clone = img.cloneNode(true);
+                // 克隆的图片也需要绑定点击大图事件
+                clone.onclick = function() { openModal(this); }; 
+                track.appendChild(clone);
+            });
+            
+            // 原有的图片也要绑定点击事件
+            images.forEach(img => {
+                img.onclick = function() { openModal(this); };
+            });
+        });
+
+        // === 灯箱逻辑 (保持不变) ===
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImg");
+        const closeModalSpan = document.getElementsByClassName("close-modal")[0];
+
+        function openModal(imgElement) {
+            modal.style.display = "block";
+            modalImg.src = imgElement.src;
+        }
+
+        closeModalSpan.onclick = function() { modal.style.display = "none"; }
+        modal.onclick = function(e) { if(e.target === modal) modal.style.display = "none"; }
+    </script>
+</body>
+</html>
